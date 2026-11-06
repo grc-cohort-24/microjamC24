@@ -20,5 +20,5 @@ namespace ugb {
             void fade_in(const mj::game_data& data) override;
             // Called as the game fades out of view
             void fade_out(const mj::game_data& data) override;
-    }
+    };
 }
