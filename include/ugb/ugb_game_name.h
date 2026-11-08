@@ -2,6 +2,7 @@
 
 #include "mj/mj_game.h"
 #include <bn_string.h>
+#include "ugb/ugb_player.h"
 
 namespace ugb {
     class ugb_game_name : public mj::game {
@@ -28,5 +29,7 @@ namespace ugb {
 
         private:
             bool _victory_achieved = false;
+            //EVERYTHING THAT NEEDS TO BE DECLARED PRE LOOP NEEDS TO LIVE HERE??
+            ugb_player _player;
     };
 }

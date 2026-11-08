@@ -2,6 +2,9 @@
 #include "mj/mj_game_list.h"
 #include "mj/mj_game.h"
 #include "bn_string_view.h"
+#include <bn_sprite_items_fish1.h>
+#include <bn_sprite_items_fish2.h>
+#include <bn_sprite_ptr.h>
 
 // String arrays for the credits can go in an anonymous namespace
 namespace
@@ -20,8 +23,9 @@ namespace
     MJ_GAME_LIST_ADD_SFX_CREDITS(sfx_credits)
 
 namespace ugb {
-    ugb::ugb_game_name::ugb_game_name([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data& data) : mj::game("ugb") {
-
+    ugb::ugb_game_name::ugb_game_name([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data& data) : 
+    mj::game("ugb"), _player(bn::fixed_point(0,0), 2) 
+    {
         //PRE GAME SETUP
     }
 
@@ -39,7 +43,7 @@ namespace ugb {
 
     mj::game_result ugb_game_name::play([[maybe_unused]] const mj::game_data& data) {
         //GAME LOOP STUFF
-        
+        _player.update();
         
         //end
         mj::game_result result(victory(), false);
