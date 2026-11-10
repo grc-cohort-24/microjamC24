@@ -30,6 +30,6 @@ namespace ugb {
         private:
             bool _victory_achieved = false;
             //EVERYTHING THAT NEEDS TO BE DECLARED PRE LOOP NEEDS TO LIVE HERE??
-            ugb_player _player;
+            player _player;
     };
 }
