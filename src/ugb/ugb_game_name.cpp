@@ -23,7 +23,7 @@ namespace
     MJ_GAME_LIST_ADD_SFX_CREDITS(sfx_credits)
 
 namespace ugb {
-    ugb::ugb_game_name::ugb_game_name([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data& data) : 
+    ugb_game_name::ugb_game_name([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data& data) : 
     mj::game("ugb"), _player(bn::fixed_point(0,0), 2) 
     {
         //PRE GAME SETUP
