@@ -68,7 +68,6 @@ namespace ugb {
             for (int i = 0; i < 3; i++) {
                 spawn_location = get_safe_spawn_loc(data.random);
                 if (spawn_location.x() == constants::MAX_X) {
-                    BN_LOG("No safe location for food " + i);
                     continue; // Couldn't find a safe location
                 }
                 Food new_food(spawn_location);
@@ -81,7 +80,6 @@ namespace ugb {
             for (int i = 0; i < 2; i++) {
                 spawn_location = get_safe_spawn_loc(data.random);
                 if (spawn_location.x() == constants::MAX_X) {
-                    BN_LOG("No safe location for hook " + i);
                     continue; // Couldn't find a safe location
                 }
                 Hook new_hook(spawn_location);
@@ -96,7 +94,6 @@ namespace ugb {
         bn::rect player_bounding_box = _player.bounding_box();
         int food_ind = 0;
         for (Entity* food_ptr : state::food) {
-            BN_LOG("food " + bn::to_string<7>(food_ind));
             Entity& food = *food_ptr;
             bn::rect food_bounding_box = food.bounding_box();
             if (player_bounding_box.intersects(food_bounding_box)) {
