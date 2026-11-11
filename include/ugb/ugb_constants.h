@@ -7,7 +7,7 @@ namespace ugb {
     namespace constants {
 
         static constexpr int MAX_ENTITIES = 15;
-        static constexpr int MAX_SCORE_CHARS = 2;
+        static constexpr int MAX_SCORE_CHARS = 24;
         static constexpr int MAX_CHARS = 24;
 
         static constexpr int MIN_Y = -bn::display::height() / 2;
