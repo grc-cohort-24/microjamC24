@@ -17,6 +17,8 @@ namespace ugb {
             bn::fixed y() const; // Get the Entity's y position
             bn::rect bounding_box() const; // Get the Entity's bounding box
 
+            virtual ~Entity() = default;
+
         protected:
             bn::sprite_ptr _sprite;
             bn::fixed _speed; // Movement speed
