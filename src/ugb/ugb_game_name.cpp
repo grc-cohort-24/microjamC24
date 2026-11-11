@@ -37,34 +37,8 @@ namespace ugb {
         state::food.clear();
         state::hooks.clear();
         state::entities.clear();
+        state::score_sprites.clear();
         state::score = 0;
-        // Initialize score
-        update_score(data.text_generator);
-        bn::fixed_point spawn_location;
-        // Spawn food
-        for (int i = 0; i < 3; i++) {
-            spawn_location = get_safe_spawn_loc(data.random);
-            if (spawn_location.x() == constants::MAX_X) {
-                BN_LOG("No safe location for food " + i);
-                continue; // Couldn't find a safe location
-            }
-            Food new_food(spawn_location);
-            // Keep track of the new entity in a vector
-            // Then store a pointer to it in the food vector
-            Entity* food_ptr = &state::entities.emplace_back(new_food);
-            state::food.push_back(food_ptr);
-        }
-        // Spawn hooks
-        for (int i = 0; i < 2; i++) {
-            spawn_location = get_safe_spawn_loc(data.random);
-            if (spawn_location.x() == constants::MAX_X) {
-                BN_LOG("No safe location for hook " + i);
-                continue; // Couldn't find a safe location
-            }
-            Hook new_hook(spawn_location);
-            Entity* hook_ptr = &state::entities.emplace_back(new_hook);
-            state::hooks.push_back(hook_ptr);
-        }
     }
 
     void ugb_game_name::update_score(const bn::sprite_text_generator& text_generator) {
@@ -82,16 +56,47 @@ namespace ugb {
     }
 
     bool ugb_game_name::victory() const {
-        return false;
+        return state::score == 3;
     }
 
     mj::game_result ugb_game_name::play([[maybe_unused]] const mj::game_data& data) {
+        if (data.pending_frames == 600) { // Respawn everything once the game starts
+            // Initialize score
+            update_score(data.text_generator);
+            bn::fixed_point spawn_location;
+            // Spawn food
+            for (int i = 0; i < 3; i++) {
+                spawn_location = get_safe_spawn_loc(data.random);
+                if (spawn_location.x() == constants::MAX_X) {
+                    BN_LOG("No safe location for food " + i);
+                    continue; // Couldn't find a safe location
+                }
+                Food new_food(spawn_location);
+                // Keep track of the new entity in a vector
+                // Then store a pointer to it in the food vector
+                Entity* food_ptr = &state::entities.emplace_back(new_food);
+                state::food.push_back(food_ptr);
+            }
+            // Spawn hooks
+            for (int i = 0; i < 2; i++) {
+                spawn_location = get_safe_spawn_loc(data.random);
+                if (spawn_location.x() == constants::MAX_X) {
+                    BN_LOG("No safe location for hook " + i);
+                    continue; // Couldn't find a safe location
+                }
+                Hook new_hook(spawn_location);
+                Entity* hook_ptr = &state::entities.emplace_back(new_hook);
+                state::hooks.push_back(hook_ptr);
+            }
+        }
+
         //GAME LOOP STUFF
         _player.update();
         
         bn::rect player_bounding_box = _player.bounding_box();
         int food_ind = 0;
         for (Entity* food_ptr : state::food) {
+            BN_LOG("food " + bn::to_string<7>(food_ind));
             Entity& food = *food_ptr;
             bn::rect food_bounding_box = food.bounding_box();
             if (player_bounding_box.intersects(food_bounding_box)) {
@@ -116,7 +121,14 @@ namespace ugb {
     }
 
     void ugb_game_name::fade_out([[maybe_unused]] const mj::game_data &data) {
-
+        if (!state::reset_already){
+            state::reset_already = true;
+            state::food.clear();
+            state::hooks.clear();
+            state::entities.clear();
+            state::score_sprites.clear();
+            state::score = 0;
+        }
     }
 
 }
