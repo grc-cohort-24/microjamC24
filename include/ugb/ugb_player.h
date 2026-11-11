@@ -12,7 +12,7 @@ namespace ugb
         Player(bn::fixed_point start_position, bn::fixed speed);
 
         // update
-        void update();
+        void update() override;
 
     private:
         int _animation_counter;

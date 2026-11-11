@@ -3,10 +3,11 @@
 #include "ugb/ugb_entity.h"
 
 namespace ugb {
+
     class Hook : public Entity {
         public:
-            Hook(bn::fixed_point spawn_position);
+            Hook(bn::fixed spawn_x, bn::fixed spawn_y);
 
-            void update();
+            void update() override;
     };
 }

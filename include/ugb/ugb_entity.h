@@ -11,7 +11,7 @@ namespace ugb {
             Entity(bn::sprite_item sprite_item, bn::fixed starting_x, bn::fixed starting_y, bn::size starting_size, bn::fixed starting_speed);
             Entity(bn::sprite_item sprite_item, bn::fixed_point starting_position, bn::fixed starting_speed);
 
-            void update();
+            virtual void update();
 
             bn::fixed x() const; // Get the Entity's x position
             bn::fixed y() const; // Get the Entity's y position
