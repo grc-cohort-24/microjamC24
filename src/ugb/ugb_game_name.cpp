@@ -1,3 +1,4 @@
+#include <bn_log.h>
 #include <bn_string_view.h>
 #include <bn_string.h>
 
@@ -33,31 +34,41 @@ namespace ugb {
     ugb_game_name::ugb_game_name([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data& data) : 
     mj::game("ugb"), _player(constants::player::INITIAL_X, constants::player::INITIAL_Y, constants::player::SPEED) 
     {
+        state::food.clear();
+        state::hooks.clear();
+        state::entities.clear();
+        state::score = 0;
         // Initialize score
         update_score(data.text_generator);
+        bn::fixed_point spawn_location;
         // Spawn food
         for (int i = 0; i < 3; i++) {
-            bn::fixed_point spawn_location = get_safe_spawn_loc(data.random);
+            spawn_location = get_safe_spawn_loc(data.random);
             if (spawn_location.x() == constants::MAX_X) {
+                BN_LOG("No safe location for food " + i);
                 continue; // Couldn't find a safe location
             }
             Food new_food(spawn_location);
-            state::entities.push_back(new_food);
-            state::food.push_back(new_food);
+            // Keep track of the new entity in a vector
+            // Then store a pointer to it in the food vector
+            Entity* food_ptr = &state::entities.emplace_back(new_food);
+            state::food.push_back(food_ptr);
         }
         // Spawn hooks
         for (int i = 0; i < 2; i++) {
-            bn::fixed_point spawn_location = get_safe_spawn_loc(data.random);
+            spawn_location = get_safe_spawn_loc(data.random);
             if (spawn_location.x() == constants::MAX_X) {
+                BN_LOG("No safe location for hook " + i);
                 continue; // Couldn't find a safe location
             }
             Hook new_hook(spawn_location);
-            state::entities.push_back(new_hook);
-            state::hooks.push_back(new_hook);
+            Entity* hook_ptr = &state::entities.emplace_back(new_hook);
+            state::hooks.push_back(hook_ptr);
         }
     }
 
     void ugb_game_name::update_score(const bn::sprite_text_generator& text_generator) {
+        state::score_sprites.clear();
         bn::string<constants::MAX_SCORE_CHARS> score_string = bn::to_string<constants::MAX_SCORE_CHARS>(state::score);
         text_generator.generate(constants::score::SCORE_X, constants::score::SCORE_Y, score_string, state::score_sprites);
     }
@@ -77,6 +88,23 @@ namespace ugb {
     mj::game_result ugb_game_name::play([[maybe_unused]] const mj::game_data& data) {
         //GAME LOOP STUFF
         _player.update();
+        
+        bn::rect player_bounding_box = _player.bounding_box();
+        int food_ind = 0;
+        for (Entity* food_ptr : state::food) {
+            Entity& food = *food_ptr;
+            bn::rect food_bounding_box = food.bounding_box();
+            if (player_bounding_box.intersects(food_bounding_box)) {
+                state::score += 1;
+                update_score(data.text_generator);
+                // Remove food from both entities and food
+                int entity_ind = food_ptr - state::entities.data();
+                state::entities.erase(state::entities.begin() + entity_ind);
+                state::food.erase(state::food.begin() + food_ind);
+                break;
+            }
+            food_ind++;
+        }
         
         //end
         mj::game_result result(victory(), false);
