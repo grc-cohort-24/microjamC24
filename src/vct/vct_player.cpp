@@ -1,6 +1,7 @@
 #include "vct_player.h"
 #include <bn_keypad.h>
 #include "bn_sprite_items_vct_angler.h"
+#include "bn_sound_items.h"
 
 namespace vct {
 
