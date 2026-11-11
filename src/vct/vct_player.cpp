@@ -5,17 +5,18 @@
 
 namespace vct {
 
+//Basic player constructor, all inital values go here
 player::player(bn ::fixed_point starting_position, bn::fixed speed) :
     _sprite(bn::sprite_items::vct_angler.create_sprite(starting_position)),
     _speed(speed)
 {}
 
-//add player input below for movement
+//Updates the player on screen
 void player::update() {
     _update_position();
 }
 
-//add player input below for movement 
+//Handles player movement (position on screen)
 void player::_update_position() {
     if(bn::keypad::left_held()) {
         _sprite.set_x(_sprite.x() - _speed);
@@ -31,7 +32,8 @@ void player::_update_position() {
     }
 }
 
-//sets the out of bounds/limits the player can move to on the screen
+//Checks if the player moves out of bounds (wins or loses)
+//And returns a true or false based on that
 bool player::out_of_bounds() const {
     return _sprite.x() > MAX_X || _sprite.x() < MIN_X ||
            _sprite.y() > MAX_Y || _sprite.y() < MIN_Y;
