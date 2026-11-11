@@ -18,7 +18,9 @@ MJ_GAME_LIST_ADD_SFX_CREDITS(sfx_credits)
 
 namespace vct 
 {
-    vct_fish_bait::vct_fish_bait([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data& data) : mj::game("vct")
+    vct_fish_bait::vct_fish_bait([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data& data) : mj::game("vct"),
+    _player({20, 20}, 2)  
+
     {
     }
 
@@ -35,12 +37,13 @@ namespace vct
     mj::game_result vct_fish_bait::play([[maybe_unused]] const mj::game_data& data) 
     {
        mj::game_result result(victory(), false);
+       _player.update();
        return result;
     }
     
     bool vct_fish_bait::victory() const 
     {
-        return false;
+        return _player.out_of_bounds();
     }
     
     void vct_fish_bait::fade_in([[maybe_unused]] const mj::game_data& data) 
