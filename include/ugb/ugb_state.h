@@ -17,6 +17,7 @@ namespace ugb {
         extern bn::vector<bn::sprite_ptr, constants::MAX_SCORE_CHARS> score_sprites;
 
         extern int score;
+        extern bool reset_already;
     }
 
 }
