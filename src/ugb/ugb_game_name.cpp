@@ -43,7 +43,7 @@ namespace ugb {
             }
             Food new_food(spawn_location);
             state::entities.push_back(new_food);
-            state::food_count++;
+            state::food.push_back(new_food);
         }
         // Spawn hooks
         for (int i = 0; i < 2; i++) {
@@ -53,6 +53,7 @@ namespace ugb {
             }
             Hook new_hook(spawn_location);
             state::entities.push_back(new_hook);
+            state::hooks.push_back(new_hook);
         }
     }
 

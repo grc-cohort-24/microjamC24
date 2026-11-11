@@ -4,6 +4,8 @@
 
 #include "ugb/ugb_constants.h"
 #include "ugb/ugb_entity.h"
+#include "ugb/ugb_hook.h"
+#include "ugb/ugb_food.h"
 
 namespace ugb {
 
@@ -11,9 +13,10 @@ namespace ugb {
         // TODO: Revisit this, why does adding extern get this to compile??
         extern bn::vector<Entity, constants::MAX_ENTITIES> entities;
         extern bn::vector<bn::sprite_ptr, constants::MAX_SCORE_CHARS> score_sprites;
+        extern bn::vector<Hook, constants::MAX_ENTITIES> hooks;
+        extern bn::vector<Food, constants::MAX_ENTITIES> food;
 
         extern int score;
-        extern int food_count;
     }
 
 }

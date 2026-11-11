@@ -4,10 +4,11 @@ namespace ugb {
 
     namespace state {
         bn::vector<Entity, constants::MAX_ENTITIES> entities;
+        bn::vector<Hook, constants::MAX_ENTITIES> hooks;
+        bn::vector<Food, constants::MAX_ENTITIES> food;
         bn::vector<bn::sprite_ptr, constants::MAX_SCORE_CHARS> score_sprites;
 
         int score;
-        int food_count;
     }
 
 }
