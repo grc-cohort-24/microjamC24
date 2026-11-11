@@ -4,9 +4,9 @@
 
 namespace ugb {
 
-    class food : public entity {
+    class Food : public Entity {
         public:
-            food(bn::fixed spawn_x, bn::fixed spawn_y);
+            Food(bn::fixed spawn_x, bn::fixed spawn_y);
 
             void update();
     };

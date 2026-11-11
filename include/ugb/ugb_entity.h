@@ -5,11 +5,11 @@
 
 namespace ugb {
     // Base class for entities (sprite_ptr w/ speed, bounding box, etc)
-    class entity {
+    class Entity {
         public:
-            entity(bn::sprite_item sprite_item, bn::fixed starting_x, bn::fixed starting_y, bn::fixed starting_speed);
-            entity(bn::sprite_item sprite_item, bn::fixed starting_x, bn::fixed starting_y, bn::size starting_size, bn::fixed starting_speed);
-            entity(bn::sprite_item sprite_item, bn::fixed_point starting_position, bn::fixed starting_speed);
+            Entity(bn::sprite_item sprite_item, bn::fixed starting_x, bn::fixed starting_y, bn::fixed starting_speed);
+            Entity(bn::sprite_item sprite_item, bn::fixed starting_x, bn::fixed starting_y, bn::size starting_size, bn::fixed starting_speed);
+            Entity(bn::sprite_item sprite_item, bn::fixed_point starting_position, bn::fixed starting_speed);
 
             void update();
 

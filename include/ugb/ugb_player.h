@@ -1,18 +1,15 @@
 #pragma once
 
-#include <bn_fixed_point.h>
-#include <bn_sprite_ptr.h>
-
 #include "ugb/ugb_entity.h"
 
 namespace ugb
 {
 
-    class player : public entity
+    class Player : public Entity
     {
     public:
         // player needs position and speed
-        player(bn::fixed_point start_position, bn::fixed speed);
+        Player(bn::fixed_point start_position, bn::fixed speed);
 
         // update
         void update();

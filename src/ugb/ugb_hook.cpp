@@ -4,9 +4,9 @@
 
 namespace ugb {
 
-    hook::hook(bn::fixed_point spawn_position) : entity::entity(bn::sprite_items::hook, spawn_position, 0) {};
+    Hook::Hook(bn::fixed_point spawn_position) : Entity::Entity(bn::sprite_items::hook, spawn_position, 0) {};
 
-    void hook::update() {
-        entity::update();
+    void Hook::update() {
+        Entity::update();
     }
 }

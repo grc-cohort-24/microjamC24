@@ -8,16 +8,16 @@
 namespace ugb
 {
 
-    player::player(bn::fixed_point start_position, bn::fixed speed) : entity::entity(bn::sprite_items::fish1, start_position, speed) {};
+    Player::Player(bn::fixed_point start_position, bn::fixed speed) : Entity::Entity(bn::sprite_items::fish1, start_position, speed) {};
 
-    void player::update()
+    void Player::update()
     {
-        entity::update(); // Update _bounding_box
+        Entity::update(); // Update _bounding_box
         _update_position();
         _update_animation();
     }
 
-    void player::_update_position()
+    void Player::_update_position()
     {
 
         // movement
@@ -41,7 +41,7 @@ namespace ugb
         }
     }
 
-    void player::_update_animation()
+    void Player::_update_animation()
     {
         _animation_counter++;
 

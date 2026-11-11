@@ -3,10 +3,10 @@
 
 namespace ugb {
 
-    food::food(bn::fixed spawn_x, bn::fixed spawn_y) : entity::entity(bn::sprite_items::food, spawn_x, spawn_y, 0) {};
+    Food::Food(bn::fixed spawn_x, bn::fixed spawn_y) : Entity::Entity(bn::sprite_items::food, spawn_x, spawn_y, 0) {};
 
-    void food::update() {
-        entity::update();
+    void Food::update() {
+        Entity::update();
     }
 
 }
