@@ -8,7 +8,7 @@
 namespace ugb
 {
 
-    Player::Player(bn::fixed_point start_position, bn::fixed speed) : Entity::Entity(bn::sprite_items::fish1, start_position, speed) {};
+    Player::Player(bn::fixed start_x, bn::fixed start_y, bn::fixed speed) : Entity::Entity(bn::sprite_items::fish1, start_x, start_y, speed) {};
 
     void Player::update()
     {

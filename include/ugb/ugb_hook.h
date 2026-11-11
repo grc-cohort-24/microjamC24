@@ -6,7 +6,7 @@ namespace ugb {
 
     class Hook : public Entity {
         public:
-            Hook(bn::fixed spawn_x, bn::fixed spawn_y);
+            Hook(bn::fixed_point spawn_position);
 
             void update() override;
     };

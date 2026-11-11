@@ -6,8 +6,8 @@ namespace ugb {
 
     class Food : public Entity {
         public:
-            Food(bn::fixed spawn_x, bn::fixed spawn_y);
+            Food(bn::fixed_point spawn_position);
 
-            void update();
+            void update() override;
     };
 }
