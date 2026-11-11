@@ -12,9 +12,9 @@ namespace ugb {
     namespace state {
         // TODO: Revisit this, why does adding extern get this to compile??
         extern bn::vector<Entity, constants::MAX_ENTITIES> entities;
+        extern bn::vector<Entity*, constants::MAX_ENTITIES> hooks;
+        extern bn::vector<Entity*, constants::MAX_ENTITIES> food;
         extern bn::vector<bn::sprite_ptr, constants::MAX_SCORE_CHARS> score_sprites;
-        extern bn::vector<Hook, constants::MAX_ENTITIES> hooks;
-        extern bn::vector<Food, constants::MAX_ENTITIES> food;
 
         extern int score;
     }
