@@ -9,6 +9,7 @@ player::player(bn ::fixed_point starting_position, bn::fixed speed) :
     _speed(speed)
 {}
 
+//add player input below for movement
 void player::update() {
     _update_position();
 }
@@ -29,6 +30,7 @@ void player::_update_position() {
     }
 }
 
+//sets the out of bounds/limits the player can move to on the screen
 bool player::out_of_bounds() const {
     return _sprite.x() > MAX_X || _sprite.x() < MIN_X ||
            _sprite.y() > MAX_Y || _sprite.y() < MIN_Y;
