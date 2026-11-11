@@ -2,7 +2,7 @@
 
 namespace vct 
 {
-    vct_fish_bait::vct_fish_bait(int completed_games, const mj::game_data& data) : mj::game("vct"),
+    vct_fish_bait::vct_fish_bait(int completed_games, const mj::game_data& data) : mj::game("vct")
     {
     }
 
