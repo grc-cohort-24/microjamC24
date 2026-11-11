@@ -1,7 +1,7 @@
 #pragma once
 
-#include <bn_sprite_ptr.h>
 #include <bn_rect.h>
+#include <bn_sprite_ptr.h>
 
 namespace ugb {
     // Base class for entities (sprite_ptr w/ speed, bounding box, etc)
