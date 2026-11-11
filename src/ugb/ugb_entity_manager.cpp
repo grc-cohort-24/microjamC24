@@ -13,8 +13,8 @@ namespace ugb {
         for (int i = 0; i < constants::spawn::MAX_ATTEMPTS; i++) {
             bool safe = true;
             // Choose a spawn location within the screen bounds (+ padding so the sprite stays on screen)
-            spawn_x = random.get_unbiased_fixed(constants::spawn::MIN_X, constants::spawn::MAX_X);
-            spawn_y = random.get_unbiased_fixed(constants::spawn::MIN_Y, constants::spawn::MAX_Y);
+            spawn_x = random.get_unbiased_int(constants::spawn::MIN_X, constants::spawn::MAX_X);
+            spawn_y = random.get_unbiased_int(constants::spawn::MIN_Y, constants::spawn::MAX_Y);
 
             for (Entity entity : state::entities) {
                 dx = bn::abs(spawn_x - entity.x());
