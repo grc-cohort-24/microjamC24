@@ -2,9 +2,6 @@
 #include <bn_string_view.h>
 #include <bn_string.h>
 
-#include "bn_sprite_items_fish1.h"
-#include "bn_sprite_items_fish2.h"
-
 #include "ugb/ugb_entity_manager.h"
 #include "ugb/ugb_food.h"
 #include "ugb/ugb_game_name.h"
