@@ -1,14 +1,14 @@
 #include <bn_keypad.h>
 
-#include "bn_sprite_items_fish1.h"
-#include "bn_sprite_items_fish2.h"
+#include "bn_sprite_items_ugb_fish1.h"
+#include "bn_sprite_items_ugb_fish2.h"
 
 #include "ugb/ugb_player.h"
 
 namespace ugb
 {
 
-    Player::Player(bn::fixed start_x, bn::fixed start_y, bn::fixed speed) : Entity::Entity(bn::sprite_items::fish1, start_x, start_y, speed) {};
+    Player::Player(bn::fixed start_x, bn::fixed start_y, bn::fixed speed) : Entity::Entity(bn::sprite_items::ugb_fish1, start_x, start_y, speed) {};
 
     void Player::update()
     {
@@ -51,11 +51,11 @@ namespace ugb
 
             if (_is_fish2)
             {
-                _sprite.set_item(bn::sprite_items::fish2);
+                _sprite.set_item(bn::sprite_items::ugb_fish2);
             }
             else
             {
-                _sprite.set_item(bn::sprite_items::fish1);
+                _sprite.set_item(bn::sprite_items::ugb_fish1);
             }
 
             _animation_counter = 0;
