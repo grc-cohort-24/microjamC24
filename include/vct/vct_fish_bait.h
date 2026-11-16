@@ -2,6 +2,9 @@
 
 #include "vct_player.h"
 #include "mj_game.h"
+#include "bn_regular_bg_items_vct_background.h"
+#include "bn_regular_bg_ptr.h"
+
 
 namespace vct 
 {
@@ -29,6 +32,8 @@ namespace vct
             void fade_out(const mj::game_data& data) override;
 
             private:
+            //background for the game
+            bn::regular_bg_ptr _bg;
             //The moveable character
             player _player;
     };
