@@ -36,6 +36,9 @@ namespace vct
             bn::regular_bg_ptr _bg;
             //The moveable character
             player _player;
+
+            //Turns the difficulty into a number of buttons
+            static int _recommended_buttons(mj::difficulty_level difficulty);
     };
 
 }
