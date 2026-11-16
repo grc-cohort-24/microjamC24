@@ -121,6 +121,12 @@ void player::qte(bn::random& random, const bn::sprite_text_generator& text_gener
         } else {
             _sprite.set_y(_sprite.y() + penalty_distance); //Moves the sprite down by x pixels for each wrong input
         }
+        else
+        {
+            sequence(random, text_generator);//Backdoor logic. If the player misses, 
+                                             //reset the game (gives newly randomized letters as well)
+                                             //(permanent feature, but needs to be revamped with the if block)
+        }
     }
 }
 
