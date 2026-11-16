@@ -8,7 +8,7 @@ namespace vct {
 //Basic player constructor, all inital values go here
 player::player(bn ::fixed_point starting_position, int button_count) :
     _sprite(bn::sprite_items::vct_angler.create_sprite(starting_position)),
-    _length(button_count)
+    num_var(button_count)
 {}
 
 //Updates the player on screen
@@ -79,14 +79,16 @@ void player::qte(bn::random& random, const bn::sprite_text_generator& text_gener
     }
 
     //If the amount of pressed buttons meets the required amount, return to end early
-    if(_pressed >= 7)
+    if(_pressed >= num_var)
     {
         return;
     }
 
+    int calculate_sink_speed = num_var / 7;
+
     //sink timer, sets a time for how often the sprite will sink, adjustable for different difficulties
     _sink_timer++;
-    if (_sink_timer > 4) { 
+    if (_sink_timer > (4 - calculate_sink_speed)) { 
         _sprite.set_y(_sprite.y() + 1); //moves it down by 1 pixel every 4 frames, Y level change
         _sink_timer = 0; 
     }
@@ -118,10 +120,10 @@ void player::qte(bn::random& random, const bn::sprite_text_generator& text_gener
         {
             _words[_pressed].set_visible(false);//Makes the pressed letter invisible, so the player knows they pressed the correct one
             _pressed++;
-            _sprite.set_y(_sprite.y() - reel_up_distance); //Moves the sprite up by x pixels for each correct input
+            _sprite.set_y(_sprite.y() - (reel_up_distance * 10 / num_var)); //Moves the sprite up by x pixels for each correct input
         } 
         else {
-            _sprite.set_y(_sprite.y() + penalty_distance); //Moves the sprite down by x pixels for each wrong input
+            _sprite.set_y(_sprite.y() + (penalty_distance * num_var / 10)); //Moves the sprite down by x pixels for each wrong input
 
             sequence(random, text_generator);//Backdoor logic. If the player misses, 
                                              //reset the game (gives newly randomized letters as well)

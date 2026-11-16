@@ -39,7 +39,9 @@ class player {
         bn::sprite_ptr _sprite;
         
         //The max amount of buttons needed to be pressed
-        int _max[15];          
+        int _max[30];   
+        
+        int num_var;
 
         //How many buttons needed to be pressed for this round
         int _length;
