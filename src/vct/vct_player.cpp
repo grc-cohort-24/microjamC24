@@ -86,7 +86,7 @@ void player::qte(bn::random& random, const bn::sprite_text_generator& text_gener
     //sink timer, sets a time for how often the sprite will sink, adjustable for different difficulties
     _sink_timer++;
     if (_sink_timer > 4) { 
-        _sprite.set_y(_sprite.y() + 1); //moves it down by 1 pixel every 4 frames, Y level control
+        _sprite.set_y(_sprite.y() + 1); //moves it down by 1 pixel every 4 frames, Y level change
         _sink_timer = 0; 
     }
 
@@ -117,6 +117,9 @@ void player::qte(bn::random& random, const bn::sprite_text_generator& text_gener
         {
             _words[_pressed].set_visible(false);//Makes the pressed letter invisible, so the player knows they pressed the correct one
             _pressed++;
+            _sprite.set_y(_sprite.y() - reel_up_distance); //Moves the sprite up by x pixels for each correct input
+        } else {
+            _sprite.set_y(_sprite.y() + penalty_distance); //Moves the sprite down by x pixels for each wrong input
         }
     }
 }
