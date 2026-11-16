@@ -43,7 +43,7 @@ namespace vct
 
     //Basically the "while" loop of our code, constantly updates player
     //as play constantly updates.
-    mj::game_result vct_fish_bait::play([[maybe_unused]] const mj::game_data& data) 
+    mj::game_result vct_fish_bait::play(const mj::game_data& data) 
     {
         //allows us to be able to adjust how fast the fish falls down the screen/sinks back
         //in wave 6 this can work as a diffuculty adjuster
@@ -54,14 +54,14 @@ namespace vct
         }
 
        mj::game_result result(victory(), false);
-       _player.update();
+       _player.update(data.random, data.text_generator);
        return result;
     }
     
     //Checks if the player wins
     bool vct_fish_bait::victory() const 
     {
-        return _player.out_of_bounds();
+        return _player.qte_complete();
     }
     
     //Most likely unused for our game
