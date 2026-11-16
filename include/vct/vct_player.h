@@ -4,6 +4,9 @@
 #include <bn_sprite_ptr.h>
 #include <bn_display.h>
 
+#include <bn_vector.h>
+#include "mj_core.h"
+
 namespace vct {
 
 class player {
@@ -21,22 +24,36 @@ class player {
         player(bn::fixed_point starting_position, bn::fixed speed);
         
         //Constantly updates the game
-        void update();
+        void update(bn::random& random, const bn::sprite_text_generator& text_generator);
+
+        //Reutnr when the quick time event is successfully comepleted (for ending the game)
+        //I realized that we need a win condition since there isn't one by defualt
+        bool qte_complete() const;
         
         //Returns true or false based on whether
         //the player has left the screen
-        bool out_of_bounds() const;
+        //bool out_of_bounds() const;
     
     private:
         //Player sprite
         bn::sprite_ptr _sprite;
         
-        //Player speed
-        bn::fixed _speed;
+        //The max amount of buttons needed to be pressed
+        int _max[7];          
 
-        //Similarly to update, but now directly
-        //updates the player (movement) instead
-        void _update_position();
+        //The amount of currently correctly pressed keys
+        int _pressed = 0;        
+        
+        //Whether the game has started ()
+        bool _started = false;   
+                         
+        //The vector that contains the text sprits on screen
+        bn::vector<bn::sprite_ptr, 16> _words;  
+
+        //This handles the player input for the QTE
+        void qte(bn::random& random, const bn::sprite_text_generator& text_generator);
+        //This handles the games actual QTE event
+        void sequence(bn::random& random, const bn::sprite_text_generator& text_generator);
 };
 
 }
