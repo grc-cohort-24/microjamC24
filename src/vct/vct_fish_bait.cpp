@@ -23,6 +23,7 @@ namespace vct
     //Constructor for an instance of an vct_fish_bait
     vct_fish_bait::vct_fish_bait([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data& data) : mj::game("vct"),
     _bg(bn::regular_bg_items::vct_background.create_bg(0, 0)),
+<<<<<<< HEAD
     _player({20, 20}, _recommended_buttons(
         recommended_difficulty_level(completed_games, data))) 
         //I'm still not entirely sure what the amount of
@@ -30,6 +31,10 @@ namespace vct
         //I've experimented with different multiplier numbers for about 30 minutes and 8
         //is what seems to work for my game, so I'll stick with it. (I know this isn't how
         //it's supposed to be done, but this was really confusing)
+=======
+    _player({20, 20}, 3 + completed_games)
+      
+>>>>>>> parent of eb862fe (FINALLY finished the difficulty levels for the QTE buttons)
     {
     }
 
@@ -39,10 +44,9 @@ namespace vct
         return "Fish Bait";
     }
 
-    //Game difficulty
     int vct_fish_bait::_recommended_buttons(mj::difficulty_level difficulty)
     {
-        if(difficulty == mj::difficulty_level::EASY)
+        if(difficulty == mj::difficulty_level::HARD)
         {
             return 7;
         }
