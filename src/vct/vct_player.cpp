@@ -118,6 +118,12 @@ void player::qte(bn::random& random, const bn::sprite_text_generator& text_gener
             _words[_pressed].set_visible(false);//Makes the pressed letter invisible, so the player knows they pressed the correct one
             _pressed++;
         }
+        else
+        {
+            sequence(random, text_generator);//Backdoor logic. If the player misses, 
+                                             //reset the game (gives newly randomized letters as well)
+                                             //(permanent feature, but needs to be revamped with the if block)
+        }
     }
 }
 
