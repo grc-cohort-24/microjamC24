@@ -8,7 +8,7 @@ namespace vct {
 //Basic player constructor, all inital values go here
 player::player(bn ::fixed_point starting_position, int button_count) :
     _sprite(bn::sprite_items::vct_angler.create_sprite(starting_position)),
-    num_var(button_count)
+    _length(button_count)
 {}
 
 //Updates the player on screen
@@ -79,18 +79,9 @@ void player::qte(bn::random& random, const bn::sprite_text_generator& text_gener
     }
 
     //If the amount of pressed buttons meets the required amount, return to end early
-    if(_pressed >= num_var)
+    if(_pressed >= _length)
     {
         return;
-    }
-
-    int calculate_sink_speed = num_var / 7;
-
-    //sink timer, sets a time for how often the sprite will sink, adjustable for different difficulties
-    _sink_timer++;
-    if (_sink_timer > (4 - calculate_sink_speed)) { 
-        _sprite.set_y(_sprite.y() + 1); //moves it down by 1 pixel every 4 frames, Y level change
-        _sink_timer = 0; 
     }
 
     int pressed = -1;   //-1 means nothing pressed (default value since 0 is a button)
@@ -119,24 +110,12 @@ void player::qte(bn::random& random, const bn::sprite_text_generator& text_gener
         if (pressed == _max[_pressed])
         {
             _words[_pressed].set_visible(false);//Makes the pressed letter invisible, so the player knows they pressed the correct one
-            _pressed++;
-            _sprite.set_y(_sprite.y() - (reel_up_distance * 10 / num_var)); //Moves the sprite up by x pixels for each correct input
-        } 
+            _pressed++;} 
         else {
-            _sprite.set_y(_sprite.y() + (penalty_distance * num_var / 10)); //Moves the sprite down by x pixels for each wrong input
-
             sequence(random, text_generator);//Backdoor logic. If the player misses, 
                                              //reset the game (gives newly randomized letters as well)
                                              //(permanent feature, but needs to be revamped with the if block)
         }
     }
 }
-
-//Checks if the player moves out of bounds (wins or loses)
-//And returns a true or false based on that
-//bool player::out_of_bounds() const {
-    //return _sprite.x() > MAX_X || _sprite.x() < MIN_X ||
-           //_sprite.y() > MAX_Y || _sprite.y() < MIN_Y;
-//}
-
 }
