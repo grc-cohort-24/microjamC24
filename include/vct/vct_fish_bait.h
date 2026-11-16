@@ -36,8 +36,6 @@ namespace vct
             bn::regular_bg_ptr _bg;
             //The moveable character
             player _player;
-
-            int _sink_timer = 0;
     };
 
 }

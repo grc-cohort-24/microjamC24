@@ -108,7 +108,7 @@ void player::qte(bn::random& random, const bn::sprite_text_generator& text_gener
     {
         if(pressed == _max[_pressed])
         {
-            _words[_pressed].set_visible(false);   // hide the finished one
+            _words[_pressed].set_visible(false);//Makes the pressed letter invisible, so the player knows they pressed the correct one
             _pressed++;
         }
     }

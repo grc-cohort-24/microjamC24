@@ -23,8 +23,7 @@ namespace vct
     //Constructor for an instance of an vct_fish_bait
     vct_fish_bait::vct_fish_bait([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data& data) : mj::game("vct"),
     _bg(bn::regular_bg_items::vct_background.create_bg(0, 0)),
-    _player({20, 20}, 2),
-    _caught_fish(bn::sprite_items::vct_angler.create_sprite(0, 60))
+    _player({20, 20}, 2)
       
     {
     }
@@ -38,21 +37,13 @@ namespace vct
     //How long the game lasts for
     int vct_fish_bait::total_frames() const 
     {
-        return 600;
+        return 300;
     }
 
     //Basically the "while" loop of our code, constantly updates player
     //as play constantly updates.
     mj::game_result vct_fish_bait::play(const mj::game_data& data) 
     {
-        //allows us to be able to adjust how fast the fish falls down the screen/sinks back
-        //in wave 6 this can work as a diffuculty adjuster
-        _sink_timer++;
-        if (_sink_timer > 4) { 
-            _caught_fish.set_y(_caught_fish.y() + 1);
-            _sink_timer = 0; 
-        }
-
        mj::game_result result(victory(), false);
        _player.update(data.random, data.text_generator);
        return result;
