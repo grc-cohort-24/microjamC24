@@ -23,7 +23,7 @@ namespace vct
     //Constructor for an instance of an vct_fish_bait
     vct_fish_bait::vct_fish_bait([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data& data) : mj::game("vct"),
     _bg(bn::regular_bg_items::vct_background.create_bg(0, 0)),
-    _player({20, 20}, 2)
+    _player({20, 20}, 3 + completed_games)
       
     {
     }
@@ -34,6 +34,22 @@ namespace vct
         return "Fish Bait";
     }
 
+    int vct_fish_bait::_recommended_buttons(mj::difficulty_level difficulty)
+    {
+        if(difficulty == mj::difficulty_level::HARD)
+        {
+            return 7;
+        }
+        else if(difficulty == mj::difficulty_level::NORMAL)
+        {
+            return 10;
+        }
+        else
+        {
+            return 15;
+        }
+    }
+    
     //How long the game lasts for
     int vct_fish_bait::total_frames() const 
     {
