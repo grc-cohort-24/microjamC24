@@ -33,6 +33,8 @@ class player {
         //Returns true or false based on whether
         //the player has left the screen
         //bool out_of_bounds() const;
+
+        void set_difficulty(int difficulty);
     
     private:
         //Player sprite
@@ -53,9 +55,9 @@ class player {
         //adding sink timer so the fish sprite can sink every certain amount of frames
         int _sink_timer = 0;
 
-        static constexpr int reel_up_distance = 12;   //go up farther depending on your input
-        static constexpr int penalty_distance = 16;   //get the input wrong and you go down farther
-        static constexpr int sink_speed = 1;          //how fast the hook sinks down
+         const int reel_up_distance = 12;   //go up farther depending on your input
+         const int penalty_distance = 16;   //get the input wrong and you go down farther
+         const int sink_speed = 1;          //how fast the hook sinks down
 
         //This handles the player input for the QTE
         void qte(bn::random& random, const bn::sprite_text_generator& text_generator);

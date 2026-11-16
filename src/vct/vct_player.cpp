@@ -10,6 +10,27 @@ player::player(bn ::fixed_point starting_position, bn::fixed speed) :
     _sprite(bn::sprite_items::vct_angler.create_sprite(starting_position))
 {}
 
+void player::set_difficulty(int difficulty) {
+    if (difficulty == 0) //easy mode
+    {
+        reel_up_distance = 14; 
+        penalty_distance = 10; 
+        sink_speed = 1;       
+    }
+    else if (difficulty >= 2)//hard mode 
+    {
+        reel_up_distance = 8;  
+        penalty_distance = 20; 
+        sink_speed = 2;        
+    }
+    else//normal because you wouldn't choose anything 
+    {
+        reel_up_distance = 12;
+        penalty_distance = 15;
+        sink_speed = 1;
+    }
+}
+
 //Updates the player on screen
 void player::update(bn::random& random, const bn::sprite_text_generator& text_generator) {
     qte(random, text_generator);
@@ -120,12 +141,6 @@ void player::qte(bn::random& random, const bn::sprite_text_generator& text_gener
             _sprite.set_y(_sprite.y() - reel_up_distance); //Moves the sprite up by x pixels for each correct input
         } else {
             _sprite.set_y(_sprite.y() + penalty_distance); //Moves the sprite down by x pixels for each wrong input
-        }
-        else
-        {
-            sequence(random, text_generator);//Backdoor logic. If the player misses, 
-                                             //reset the game (gives newly randomized letters as well)
-                                             //(permanent feature, but needs to be revamped with the if block)
         }
     }
 }
