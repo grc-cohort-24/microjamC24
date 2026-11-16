@@ -83,6 +83,13 @@ void player::qte(bn::random& random, const bn::sprite_text_generator& text_gener
         return;
     }
 
+    //sink timer, sets a time for how often the sprite will sink, adjustable for different difficulties
+    _sink_timer++;
+    if (_sink_timer > 4) { 
+        _sprite.set_y(_sprite.y() + 1); //moves it down by 1 pixel every 4 frames, Y level control
+        _sink_timer = 0; 
+    }
+
     int pressed = -1;   //-1 means nothing pressed (default value since 0 is a button)
 
     //QTE inputs

@@ -37,7 +37,7 @@ namespace vct
     //How long the game lasts for
     int vct_fish_bait::total_frames() const 
     {
-        return 300;
+        return 600; //10 seconds 60 fps
     }
 
     //Basically the "while" loop of our code, constantly updates player

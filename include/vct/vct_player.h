@@ -50,6 +50,9 @@ class player {
         //The vector that contains the text sprits on screen
         bn::vector<bn::sprite_ptr, 16> _words;  
 
+        //adding sink timer so the fish sprite can sink every certain amount of frames
+        int _sink_timer = 0;
+
         //This handles the player input for the QTE
         void qte(bn::random& random, const bn::sprite_text_generator& text_generator);
         //This handles the games actual QTE event
