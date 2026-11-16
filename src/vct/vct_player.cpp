@@ -79,7 +79,7 @@ void player::qte(bn::random& random, const bn::sprite_text_generator& text_gener
     }
 
     //If the amount of pressed buttons meets the required amount, return to end early
-    if(_pressed >= _length)
+    if(_pressed >= 7)
     {
         return;
     }
