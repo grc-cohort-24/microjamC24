@@ -22,8 +22,9 @@ namespace vct
 {
     //Constructor for an instance of an vct_fish_bait
     vct_fish_bait::vct_fish_bait([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data& data) : mj::game("vct"),
-    _player({20, 20}, 2)  
-
+    _bg(bn::regular_bg_items::vct_background.create_bg(0, 0)),
+    _player({20, 20}, 2)
+      
     {
     }
 
