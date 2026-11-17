@@ -12,11 +12,8 @@ namespace vct {
 class player {
         //Screen bounds
         static constexpr int MAX_X = bn::display::width() / 2;
-
         static constexpr int MIN_X = -bn::display::width() / 2;
-
         static constexpr int MAX_Y = bn::display::height() / 2;
-        
         static constexpr int MIN_Y = -bn::display::height() / 2;
 
     public:
@@ -39,10 +36,8 @@ class player {
         bn::sprite_ptr _sprite;
         
         //The max amount of buttons needed to be pressed
-        int _max[30];   
+        int _max[15];   
         
-        int num_var;
-
         //How many buttons needed to be pressed for this round
         int _length;
 
@@ -54,13 +49,6 @@ class player {
                          
         //The vector that contains the text sprits on screen
         bn::vector<bn::sprite_ptr, 16> _words;  
-
-        //adding sink timer so the fish sprite can sink every certain amount of frames
-        int _sink_timer = 0;
-
-        static constexpr int reel_up_distance = 12;   //go up farther depending on your input
-        static constexpr int penalty_distance = 16;   //get the input wrong and you go down farther
-        static constexpr int sink_speed = 1;          //how fast the hook sinks down
 
         //This handles the player input for the QTE
         void qte(bn::random& random, const bn::sprite_text_generator& text_generator);
