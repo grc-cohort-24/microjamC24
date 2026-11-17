@@ -36,7 +36,7 @@ namespace vct
     //Game title/ the instructions to give to the player
     bn::string<16> vct_fish_bait::title() const 
     {
-        return "Fish Bait";
+        return "Click The Buttons In Order!";
     }
 
     //Game difficulty
