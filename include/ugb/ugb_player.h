@@ -11,7 +11,6 @@ namespace ugb
         // player needs position and speed
         Player(bn::fixed start_x, bn::fixed start_y, bn::fixed speed);
 
-        // update
         void update() override;
 
     private:
