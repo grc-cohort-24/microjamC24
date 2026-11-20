@@ -4,8 +4,10 @@
 #include "bn_display.h"
 #include "bn_sprite_ptr.h"
 #include "bn_sprite_animate_actions.h"  
+#include <bn_random.h>
 
 #include "mj/mj_game_list.h"
+#include "mck/mck_bounds.h"
 
 namespace
 {
@@ -26,15 +28,20 @@ namespace mck {
     mck_shark_dodge::mck_shark_dodge([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data& data):
         mj::game("mck"),
         _player(player({0, 0}, 1)),
-        _enemy(enemy({60, -60}, 0, 0))
-    {}
+        _urchin(urchin(urchin_location())),
+        _enemy_speed(enemy_speed(recommended_difficulty_level(completed_games, data)))
+    {
+        for (int i = 0; i < ENEMIES_PER_WAVE; i++) { // add 3 enemies to the vector initially
+            _enemies.push_back(enemy(_enemy_speed, data.random));
+        }
+    }
 
     bn::string<16> mck_shark_dodge::title() const {
         return "Dodge!";
     }
 
     int mck_shark_dodge::total_frames() const {
-    return 600; // 600 frames at 60fps = 10 seconds
+    return TOTAL_FRAMES; // 600 frames at 60fps = 10 seconds
 }
 
 /**
@@ -51,10 +58,27 @@ mj::game_result mck_shark_dodge::play([[maybe_unused]] const mj::game_data& data
 {
     // update the player position
     _player.update();
-    _enemy.update();
 
-    if(_player.hitbox().intersects(_enemy.hitbox())) {
+    // update all enemy positions, check for collisions
+    for (enemy e : _enemies) {
+        e.update();
+        if(_player.hitbox().intersects(e.hitbox()) ){
+            _hit = true;
+            break; // game has ended: no need to iterate further
+        }
+    }
+
+    if(_player.hitbox().intersects(_urchin.hitbox())) {
         _hit = true;
+    }
+
+    if (!_hit) { // proceed only if player has not lost
+        _timer++;
+        if (_timer % WAVE_INTERVAL_FRAMES == 0) { // every 50 frames, make 3 more sharks
+            for (int i = 0; i < ENEMIES_PER_WAVE; i++) {
+                _enemies.push_back(enemy(_enemy_speed, data.random));
+            }
+        }
     }
 
     mj::game_result result(_hit, false);
@@ -87,4 +111,27 @@ void mck_shark_dodge::fade_in([[maybe_unused]] const mj::game_data& data)
 void mck_shark_dodge::fade_out([[maybe_unused]] const mj::game_data& data)
 {
 }
+
+ // Determines Enemy speed
+bn::fixed mck_shark_dodge::enemy_speed(mj::difficulty_level difficulty){
+    if(difficulty == mj::difficulty_level::EASY) {
+        return 1;
+    } else if (difficulty == mj::difficulty_level::NORMAL) {
+        return 2;
+    } 
+    return 3;
+};
+
+/**
+ * selects a location for the urchin
+ */
+bn::fixed_point mck_shark_dodge::urchin_location() {
+
+    
+    int spawn_x = rand_spawn.get_int(32, MAX_X);
+    int spawn_y = rand_spawn.get_int(MIN_Y, MAX_Y);
+
+    return bn::fixed_point(spawn_x, spawn_y);
+}
+
 }
