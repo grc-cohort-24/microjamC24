@@ -25,10 +25,11 @@ namespace blo
      * @param completed_games how many microgames the player has completed so far
      * @param data shared information, such as a rng and number of frames left in the microgame
      */
-    blo_SharkASnack::blo_SharkASnack([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data &data) : 
-    mj::game("blo"),
-    _player(player()),
-    _shark(shark({0, 0}))
+    blo_SharkASnack::blo_SharkASnack([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data &data) : mj::game("blo"),
+                                                                                                                         _player(player()),
+                                                                                                                         _shark(shark({0, 0},
+                                                                                                                                      _window_for(recommended_difficulty_level(completed_games, data)),
+                                                                                                                                      _fakeout_for(recommended_difficulty_level(completed_games, data))))
     {
     }
 
@@ -43,13 +44,36 @@ namespace blo
     };
 
     /**
+     * Returns the frame timing for the given dificulty
+     */
+    int blo_SharkASnack::_window_for(mj::difficulty_level difficulty)
+    {
+        if (difficulty == mj::difficulty_level::HARD)
+        {
+            return 20; // 0.33 seconds
+        }
+        else
+        {
+            return 41; // 0.69 seconds
+        }
+    };
+
+    /**
+     * If the dificulty is normal or above the shark gains a fakeout
+     */
+    bool blo_SharkASnack::_fakeout_for(mj::difficulty_level difficulty)
+    {
+        return difficulty != mj::difficulty_level::EASY;
+    };
+
+    /**
      * How long the timer for the game should be set to in frames.
      *
      * 60 frames is approx 1 second
      */
     int blo_SharkASnack::total_frames() const
     {
-        return 600;
+        return 600; // 10 seconds
     };
 
     /**
@@ -63,7 +87,7 @@ namespace blo
         _player.update(_shark);
         _shark.update();
 
-        mj::game_result result(victory(), false);
+        mj::game_result result(victory() || _shark.snack_stolen(), false);
         return result;
     };
 
@@ -73,7 +97,7 @@ namespace blo
      */
     bool blo_SharkASnack::victory() const
     {
-        return _shark.punched();
+        return _shark.bonked();
     };
 
     /**
