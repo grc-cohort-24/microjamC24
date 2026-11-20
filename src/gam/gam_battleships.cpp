@@ -2,6 +2,9 @@
 #include "mj/mj_game_list.h"
 #include "bn_regular_bg_items_gam_grid.h"
 #include "bn_keypad.h"
+#include "mj_difficulty_level.h"
+#include "mj_game_data.h"
+#include "mj_game.h"
 
 namespace {
     constexpr bn::string_view code_credits[] = {"Garrett Fiorito", "Samuel Hyrych Zherzdyev"};
@@ -24,16 +27,27 @@ namespace gam {
    * @param data shared information, such as a rng and number of frames left in the microgame
    */
   gam_battleships::gam_battleships(
-    [[maybe_unused]] int completed_games, 
+    int completed_games, 
     const mj::game_data& data) : 
     mj::game("gam"),
     _game_grid(5, 5),
     _game_selector(0, 0),
     _game_background(bn::regular_bg_items::gam_grid.create_bg(0, 0))
   {
-    _game_grid.new_ship(2, data.random);
-    _game_grid.new_ship(3, data.random);
-    _game_grid.new_ship(4, data.random);
+    mj::difficulty_level difficulty = recommended_difficulty_level(completed_games, data);
+
+        if(difficulty == mj::difficulty_level::EASY) {
+            _game_grid.new_ship(3, data.random);
+        }
+        else if(difficulty == mj::difficulty_level::NORMAL) {
+            _game_grid.new_ship(3, data.random);
+            _game_grid.new_ship(4, data.random);
+        }
+        else if(difficulty == mj::difficulty_level::HARD) {
+            _game_grid.new_ship(4, data.random);
+            _game_grid.new_ship(3, data.random);
+            _game_grid.new_ship(2, data.random);
+        }
   }
 
   /**
