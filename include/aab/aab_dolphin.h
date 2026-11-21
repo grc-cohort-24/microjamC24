@@ -1,0 +1,27 @@
+#pragma once
+
+#include <bn_fixed_point.h>
+#include <bn_sprite_ptr.h>
+#include <bn_sprite_animate_actions.h>
+#include <bn_display.h>
+
+namespace aab
+{
+    class Dolphin
+    {
+    public:
+        Dolphin(bn::fixed_point starting_position);
+
+        void update();
+        void set_camera(const bn::camera_ptr& camera);
+        bn::fixed x() const;
+        bn::fixed y() const;
+
+    private:
+        bn::sprite_ptr _sprite;
+        bn::sprite_animate_action<6> _animate;
+        bn::fixed _speed = 0.5;
+
+        void _update_position(bn::fixed dolphin_speed);
+    };
+}
