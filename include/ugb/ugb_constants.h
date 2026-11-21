@@ -45,6 +45,7 @@ namespace ugb {
             static constexpr int INITIAL_X = 0;
             static constexpr int INITIAL_Y = 0;
             static constexpr int SPEED = 2;
+            static constexpr int ANIMATION_WAIT_FRAMES = 30; // Frames between sprite tile switches
         }
 
         namespace hook {
