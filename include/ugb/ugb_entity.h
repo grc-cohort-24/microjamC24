@@ -2,6 +2,7 @@
 
 #include <bn_rect.h>
 #include <bn_sprite_ptr.h>
+#include <bn_sprite_tiles_item.h>
 
 namespace ugb {
     // Base class for entities (sprite_ptr w/ speed, bounding box, etc)
@@ -22,5 +23,6 @@ namespace ugb {
             bn::sprite_ptr _sprite;
             bn::fixed _speed; // Movement speed
             bn::rect _bounding_box; // Rectangle drawn around sprite for collision
+            bn::sprite_tiles_item _tiles;
     };
 }
