@@ -7,6 +7,8 @@
 #include "mj/mj_game_list.h"
 #include "mj/mj_game.h"
 
+#include "bn_regular_bg_items_ugb_background.h"
+
 // String arrays for the credits can go in an anonymous namespace
 namespace
 {
@@ -25,7 +27,9 @@ namespace
 
 namespace ugb {
     ugb_game_name::ugb_game_name([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data& data) : 
-    mj::game("ugb"), _player(constants::player::INITIAL_X, constants::player::INITIAL_Y, constants::player::SPEED) 
+    mj::game("ugb"), _player(constants::player::INITIAL_X, constants::player::INITIAL_Y, constants::player::SPEED), 
+    _background(bn::regular_bg_items::ugb_background.create_bg(0, 0)) 
+
     {
         // Get recommended difficulty level
         mj::difficulty_level difficulty = recommended_difficulty_level(completed_games, data);
@@ -37,6 +41,7 @@ namespace ugb {
 
         // Initialize score
         update_score(data.text_generator);
+
 
         // Spawn food
         bn::fixed_point spawn_location;
@@ -56,6 +61,7 @@ namespace ugb {
             bn::fixed_point hook_position(constants::hook::X_POSITIONS[i], start_y);
             _state.hooks.emplace_back(hook_position, constants::difficulty::HOOK_SPEED[difficulty_ind]);
         }
+
     }
 
     void ugb_game_name::update_score(const bn::sprite_text_generator& text_generator) {
