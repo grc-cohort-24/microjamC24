@@ -15,8 +15,8 @@ player::player(bn ::fixed_point starting_position, int difficulty) :
 {}
 
 //Updates the player on screen
-void player::update(bn::random& random, const bn::sprite_text_generator& text_generator) {
-    qte(random, text_generator);
+void player::update(bn::random& random) {
+    qte(random);
 }
 
 //Win condition
@@ -26,7 +26,7 @@ bool player::qte_complete() const
 }
 
 //This handles the games actual QTE event
-void player::sequence(bn::random& random, const bn::sprite_text_generator& text_generator)
+void player::sequence(bn::random& random)
 {
     _words.clear(); //Words MUST be cleared
     _pressed = 0; //Initializes the start of the game with 0 currently pressed buttons
@@ -67,13 +67,13 @@ void player::sequence(bn::random& random, const bn::sprite_text_generator& text_
 }
 
 //This handles the player input for the QTE
-void player::qte(bn::random& random, const bn::sprite_text_generator& text_generator) {
+void player::qte(bn::random& random) {
 
     //This if block is REQUIRED. Bool checks game started, if not, toggles true
     //and blocks the game from being able to be ran WHILE the game is currently running.
     if(!_started)
     {
-        sequence(random, text_generator);
+        sequence(random);
         _started = true;
     }
 
@@ -107,20 +107,50 @@ void player::qte(bn::random& random, const bn::sprite_text_generator& text_gener
         pressed = 3;
     }
 
-    //After passing a QTE, hides the letter (WILL NEED TO BE CHANGED, THIS IS A PLACEHOLDER FEATURE)
+    //After passing a QTE, moves onto the next and highlights that sprite (moves onto next sprite frame)
     if (pressed != -1)
     {
-        if (pressed == _max[_pressed])
-        {
-            _words[_pressed].set_visible(false);//Makes the pressed letter invisible, so the player knows they pressed the correct one
-             _sprite.set_y(_sprite.y() - _reel);//Reels the fish up one chunk (Note, Butanos Y axis is flipped)
-            _pressed++;} 
+        _sprite.set_y(_sprite.y() - _reel);//Reels the fish up one chunk (Note, Butanos Y axis is flipped)
+        _pressed++;
 
-            //After all 3 buttons are pressed, spawn a new batch
+        //After all 3 buttons are pressed, spawn a new batch
         if (_pressed == _buttons)
         {
-            sequence(random, text_generator);   //If the player gets 3 presses correct, 
+            sequence(random);   //If the player gets 3 presses correct, 
                                                 //gives a new batch of letters to press
+        }
+
+        //As long as there are still buttons to be pressed, this else statement always runs
+        else
+        {
+            //Goes through all 3 buttons and only the current one gets frame 1
+            for(int i = 0; i < 3; i++)
+            {
+                int frame = 0;
+
+                if(i == _pressed)
+                {
+                    frame = 1;
+                }
+
+
+                if (_max[i] == 0)
+                {
+                    _words[i].set_tiles(bn::sprite_items::vct_a.tiles_item(), frame);
+                }
+                else if (_max[i] == 1)
+                {
+                    _words[i].set_tiles(bn::sprite_items::vct_b.tiles_item(), frame);
+                }
+                else if (_max[i] == 2)
+                {
+                    _words[i].set_tiles(bn::sprite_items::vct_l.tiles_item(), frame);
+                }
+                else if (_max[i] == 3)
+                {
+                    _words[i].set_tiles(bn::sprite_items::vct_r.tiles_item(), frame);
+                }
+            }
         }
     }
 }

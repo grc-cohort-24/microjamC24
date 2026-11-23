@@ -67,7 +67,7 @@ namespace vct
     mj::game_result vct_fish_bait::play(const mj::game_data& data) 
     {
        mj::game_result result(victory(), false);
-       _player.update(data.random, data.text_generator);
+       _player.update(data.random);
        return result;
     }
     
