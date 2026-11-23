@@ -18,7 +18,7 @@ void player::update(bn::random& random, const bn::sprite_text_generator& text_ge
 //Win condition
 bool player::qte_complete() const
 {
-    return _pressed >= _level;
+    return _sprite.y() < MIN_Y; //remember the inverse y axis
 }
 
 //This handles the games actual QTE event
@@ -76,6 +76,12 @@ void player::qte(bn::random& random, const bn::sprite_text_generator& text_gener
     _sprite.set_y(_sprite.y() + (bn::fixed(_level)/60));//Makes the fish sink based on difficulty
                                                         //(After countless tests, 60 was the perfect number
                                                         //to stabilize difficulty)
+
+    //Prevents the fish from leaving frame if the player is too slow
+    if(_sprite.y() > MAX_Y)
+    {
+        _sprite.set_y(MAX_Y);
+    }
 
     int pressed = -1;   //-1 means nothing pressed (default value since 0 is a button)
 
