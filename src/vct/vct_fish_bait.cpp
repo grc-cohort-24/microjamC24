@@ -44,15 +44,15 @@ namespace vct
     {
         if(difficulty == mj::difficulty_level::EASY)
         {
-            return 4;
+            return 8;
         }
         else if(difficulty == mj::difficulty_level::NORMAL)
         {
-            return 6;
+            return 13;
         }
         else
         {
-            return 8;
+            return 18;
         }
     }
     
