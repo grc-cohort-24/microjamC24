@@ -7,6 +7,8 @@
 #include <bn_vector.h>
 #include "mj_core.h"
 
+#include <bn_sprite_animate_actions.h>
+
 namespace vct {
 
 class player {
@@ -30,6 +32,9 @@ class player {
     private:
         //Player sprite
         bn::sprite_ptr _sprite;
+
+        //Animates the fish (angler)
+        bn::sprite_animate_action<4> _angler;
         
         //Where the integers value for the buttons are stored, and the max that are able to be stored
         int _max[3];   
