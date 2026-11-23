@@ -31,8 +31,8 @@ class player {
         //Player sprite
         bn::sprite_ptr _sprite;
         
-        //The max amount of buttons needed to be pressed (also where they're stored)
-        int _max[15];   
+        //Where the integers value for the buttons are stored, and the max that are able to be stored
+        int _max[3];   
 
         //Max amount of buttons ON SCREEN
         int _buttons = 3;
