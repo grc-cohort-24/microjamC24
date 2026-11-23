@@ -26,10 +26,6 @@ class player {
         //Reutnr when the quick time event is successfully comepleted (for ending the game)
         //I realized that we need a win condition since there isn't one by defualt
         bool qte_complete() const;
-        
-        //Returns true or false based on whether
-        //the player has left the screen
-        //bool out_of_bounds() const;
     
     private:
         //Player sprite
