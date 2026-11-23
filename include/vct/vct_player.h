@@ -18,7 +18,7 @@ class player {
 
     public:
         //Player constructor
-        player(bn::fixed_point starting_position, int button_count);
+        player(bn::fixed_point starting_position, int difficulty);
         
         //Constantly updates the game
         void update(bn::random& random, const bn::sprite_text_generator& text_generator);
@@ -36,6 +36,9 @@ class player {
         
         //How many buttons needed to be pressed for this round
         int _length;
+
+        //The length that the fish sprite will be reeled up on the screen
+        int reel;
 
         //The amount of currently correctly pressed keys
         int _pressed = 0;        

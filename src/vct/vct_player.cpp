@@ -1,14 +1,13 @@
 #include "vct_player.h"
 #include <bn_keypad.h>
 #include "bn_sprite_items_vct_angler.h"
-#include "bn_sound_items.h"
 
 namespace vct {
 
 //Basic player constructor, all inital values go here
-player::player(bn ::fixed_point starting_position, int button_count) :
+player::player(bn ::fixed_point starting_position, int difficulty) :
     _sprite(bn::sprite_items::vct_angler.create_sprite(starting_position)),
-    _length(button_count)
+    _length(difficulty)
 {}
 
 //Updates the player on screen
@@ -29,14 +28,10 @@ void player::sequence(bn::random& random, const bn::sprite_text_generator& text_
     _pressed = 0; //Initializes the start of the game with 0 currently pressed buttons
 
 
-    //Max_x - Min_X is so that I can get the full length of the screen. Since it'd be
-    //120 - (-120) = 240. Which would be the ful length of the screen.
-    //Then 240/8 to split the screen into _length sections
-    //Then the x of each letter will be sitting in the border between each section
-    //So the button starts at the left of the screen, Min_x, and increments every 1/_length of the screen
-    //for each new button.
-    int size = (MAX_X - MIN_X) / (_length + 1); //since it start at 0
-    int x = MIN_X + size;
+    //Max_X - Min_X = screen length.
+    int spacing = (MAX_X - MIN_X) / 4;
+    reel = (MAX_Y - MIN_Y) / _length;
+    int x = MIN_X + spacing;
 
     for(int i = 0; i < _length; i++)
     {
@@ -61,7 +56,7 @@ void player::sequence(bn::random& random, const bn::sprite_text_generator& text_
             text_generator.generate(x, 50, "R", _words);
         }
 
-        x += size; //For each iteration of the for loop, the next word will move another 1/_length of the screen over
+        x += spacing; //For each iteration of the for loop, the next word will move another 1/_length of the screen over
     }
 }
 
@@ -110,11 +105,14 @@ void player::qte(bn::random& random, const bn::sprite_text_generator& text_gener
         if (pressed == _max[_pressed])
         {
             _words[_pressed].set_visible(false);//Makes the pressed letter invisible, so the player knows they pressed the correct one
+             _sprite.set_y(_sprite.y() - reel);//Reels the fish up one chunk (Note, Butanos Y axis is flipped)
             _pressed++;} 
-        else {
-            sequence(random, text_generator);//Backdoor logic. If the player misses, 
-                                             //reset the game (gives newly randomized letters as well)
-                                             //(permanent feature, but needs to be revamped with the if block)
+
+            //After all 3 are pressed, spawn a new batch
+        if (_pressed == 3)
+        {
+            sequence(random, text_generator);   //If the player gets 3 presses correct, 
+                                                //gives a new batch of letters to press
         }
     }
 }
