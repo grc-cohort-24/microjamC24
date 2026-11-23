@@ -11,6 +11,7 @@ namespace ugb {
 
         private:
             bool _going_down;
+            bn::fixed _half_speed;
     };
     
 }

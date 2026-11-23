@@ -6,7 +6,7 @@
 namespace ugb {
 
     Hook::Hook(bn::fixed_point spawn_position, bn::fixed speed) : 
-        Entity::Entity(bn::sprite_items::ugb_hook, spawn_position, speed), _going_down(true) {
+        Entity::Entity(bn::sprite_items::ugb_hook, spawn_position, speed), _going_down(true), _half_speed(_speed/2) {
         };
 
     void Hook::update() {
@@ -21,7 +21,7 @@ namespace ugb {
         if (_going_down) {
             _sprite.set_y(current_y + _speed);
         } else {
-            _sprite.set_y(current_y - _speed);
+            _sprite.set_y(current_y - _half_speed);
         }
 
         Entity::update();
