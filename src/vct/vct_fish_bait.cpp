@@ -52,7 +52,7 @@ namespace vct
         }
         else
         {
-            return 15;
+            return 12;
         }
     }
     
