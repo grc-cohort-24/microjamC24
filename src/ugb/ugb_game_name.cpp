@@ -104,6 +104,11 @@ namespace ugb {
             }
         }
 
+        //do an update for each food
+        for (Food& food : _state.food) {
+            food.update();
+        }
+
         int points = _state.food_manager.collect_food(_state.food, player_bounding_box);
 
         if (points > 0) {
