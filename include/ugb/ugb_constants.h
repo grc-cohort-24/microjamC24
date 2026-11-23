@@ -28,9 +28,10 @@ namespace ugb {
             static constexpr int MAX_ATTEMPTS = 10;
             static constexpr int MIN_DISTANCE = 10;
             static constexpr int PADDING = 8;
+            static constexpr int PADDING_BOTTOM = PADDING + 6; // Some extra spacing so things don't spawn behind UI
 
             static constexpr int MIN_Y = constants::MIN_Y + PADDING;
-            static constexpr int MAX_Y = constants::MAX_Y - PADDING;
+            static constexpr int MAX_Y = constants::MAX_Y - PADDING_BOTTOM;
             static constexpr int MIN_X = constants::MIN_X + PADDING;
             static constexpr int MAX_X = constants::MAX_X - PADDING;
         }
