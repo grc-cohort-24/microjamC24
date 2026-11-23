@@ -1,0 +1,89 @@
+#include "vct_fish_bait.h"
+
+#include "mj/mj_game_list.h"
+
+//Game credits
+namespace
+{
+    constexpr bn::string_view code_credits[] = { "Moratsu", "Raul" };
+    constexpr bn::string_view graphics_credits[] = { "Moratsu", "Raul" };
+    constexpr bn::string_view sfx_credits[] = {""};
+    constexpr bn::string_view music_credits[] = {""};
+}
+
+MJ_GAME_LIST_ADD(vct::vct_fish_bait)
+MJ_GAME_LIST_ADD_CODE_CREDITS(code_credits)
+MJ_GAME_LIST_ADD_GRAPHICS_CREDITS(graphics_credits)
+MJ_GAME_LIST_ADD_MUSIC_CREDITS(music_credits)
+MJ_GAME_LIST_ADD_SFX_CREDITS(sfx_credits)
+
+//Declarations
+namespace vct 
+{
+    //Constructor for an instance of an vct_fish_bait
+    vct_fish_bait::vct_fish_bait([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data& data) : mj::game("vct"),
+    _bg(bn::regular_bg_items::vct_background.create_bg(0, -24)),
+    _player({0, 0}, _recommended_buttons(
+        recommended_difficulty_level(completed_games * 8, data))) 
+        //I'm still not entirely sure what the amount of
+        //completed games is to move onto the next level is.
+        //I've experimented with different multiplier numbers for about 30 minutes and 8
+        //is what seems to work for my game, so I'll stick with it. (I know this isn't how
+        //it's supposed to be done, but this was really confusing)
+    {
+    }
+
+    //Game title/ the instructions to give to the player
+    bn::string<16> vct_fish_bait::title() const 
+    {
+        return "Hit the buttons!";
+    }
+
+    //Game difficulty
+    int vct_fish_bait::_recommended_buttons(mj::difficulty_level difficulty)
+    {
+        if(difficulty == mj::difficulty_level::EASY)
+        {
+            return 8;
+        }
+        else if(difficulty == mj::difficulty_level::NORMAL)
+        {
+            return 13;
+        }
+        else
+        {
+            return 18;
+        }
+    }
+    
+    //How long the game lasts for
+    int vct_fish_bait::total_frames() const 
+    {
+        return 600; //10 seconds 60 fps
+    }
+
+    //Basically the "while" loop of our code, constantly updates player
+    //as play constantly updates.
+    mj::game_result vct_fish_bait::play(const mj::game_data& data) 
+    {
+       mj::game_result result(victory(), false);
+       _player.update(data.random);
+       return result;
+    }
+    
+    //Checks if the player wins
+    bool vct_fish_bait::victory() const 
+    {
+        return _player.qte_complete();
+    }
+    
+    //Most likely unused for our game
+    void vct_fish_bait::fade_in([[maybe_unused]] const mj::game_data& data) 
+    {
+    }
+    
+    //Most likely unused for our game
+    void vct_fish_bait::fade_out([[maybe_unused]] const mj::game_data& data) 
+    {
+    }
+}
