@@ -62,16 +62,16 @@ void player::sequence(bn::random& random, const bn::sprite_text_generator& text_
 
 //This handles the player input for the QTE
 void player::qte(bn::random& random, const bn::sprite_text_generator& text_generator) {
-    
-    //This if block is REQUIRED. The bool checks if the game started, if not it toggles to true
+
+    //This if block is REQUIRED. Bool checks game started, if not, toggles true
     //and blocks the game from being able to be ran WHILE the game is currently running.
-    //This was a big issue when testing because the qte words would rapidly change since the game
-    //started over and over again.
     if(!_started)
     {
         sequence(random, text_generator);
         _started = true;
     }
+
+    _sprite.set_y(_sprite.y() + 0.1);//Makes the fish sink a little every frame
 
     //If the amount of pressed buttons meets the required amount, return to end early
     if(_pressed >= _length)
