@@ -1,6 +1,10 @@
 #include "vct_player.h"
 #include <bn_keypad.h>
 #include "bn_sprite_items_vct_angler.h"
+#include "bn_sprite_items_vct_a.h"
+#include "bn_sprite_items_vct_b.h"
+#include "bn_sprite_items_vct_l.h"
+#include "bn_sprite_items_vct_r.h"
 
 namespace vct {
 
@@ -43,19 +47,19 @@ void player::sequence(bn::random& random, const bn::sprite_text_generator& text_
 
         if (_max[i] == 0)
         {
-            text_generator.generate(x, 50, "A", _words);
+            _words.push_back(bn::sprite_items::vct_a.create_sprite(x, 50));
         }
         else if (_max[i] == 1)
         {
-            text_generator.generate(x, 50, "B", _words);
+            _words.push_back(bn::sprite_items::vct_b.create_sprite(x, 50));
         }
         else if (_max[i] == 2)
         {
-            text_generator.generate(x, 50, "L", _words);
+            _words.push_back(bn::sprite_items::vct_l.create_sprite(x, 50));
         }
         else if (_max[i] == 3)
         {
-            text_generator.generate(x, 50, "R", _words);
+            _words.push_back(bn::sprite_items::vct_r.create_sprite(x, 50));
         }
 
         x += spacing; //For each iteration of the for loop, the next word will move another 1/_length of the screen over
