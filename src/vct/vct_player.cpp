@@ -7,7 +7,7 @@ namespace vct {
 //Basic player constructor, all inital values go here
 player::player(bn ::fixed_point starting_position, int difficulty) :
     _sprite(bn::sprite_items::vct_angler.create_sprite(starting_position)),
-    _length(difficulty)
+    _level(difficulty)
 {}
 
 //Updates the player on screen
@@ -18,7 +18,7 @@ void player::update(bn::random& random, const bn::sprite_text_generator& text_ge
 //Win condition
 bool player::qte_complete() const
 {
-    return _pressed >= _length;
+    return _pressed >= _level;
 }
 
 //This handles the games actual QTE event
@@ -28,12 +28,14 @@ void player::sequence(bn::random& random, const bn::sprite_text_generator& text_
     _pressed = 0; //Initializes the start of the game with 0 currently pressed buttons
 
 
-    //Max_X - Min_X = screen length.
+    //Max_X - Min_X = screen length. (Spaced out evenly across the screen in 4 sections)
     int spacing = (MAX_X - MIN_X) / 4;
-    reel = (MAX_Y - MIN_Y) / _length;
     int x = MIN_X + spacing;
 
-    for(int i = 0; i < _length; i++)
+    //Returns the distance the fish is reeled (by a 8th of the screen)
+    _reel = (MAX_Y - MIN_Y) / 8;
+
+    for(int i = 0; i < _buttons; i++)
     {
         //Assigns index i of the max letters vector a random number, which then gets assigned
         //as a button
@@ -71,13 +73,9 @@ void player::qte(bn::random& random, const bn::sprite_text_generator& text_gener
         _started = true;
     }
 
-    _sprite.set_y(_sprite.y() + 0.1);//Makes the fish sink a little every frame
-
-    //If the amount of pressed buttons meets the required amount, return to end early
-    if(_pressed >= _length)
-    {
-        return;
-    }
+    _sprite.set_y(_sprite.y() + (bn::fixed(_level)/60));//Makes the fish sink based on difficulty
+                                                        //(After countless tests, 60 was the perfect number
+                                                        //to stabilize difficulty)
 
     int pressed = -1;   //-1 means nothing pressed (default value since 0 is a button)
 
@@ -105,11 +103,11 @@ void player::qte(bn::random& random, const bn::sprite_text_generator& text_gener
         if (pressed == _max[_pressed])
         {
             _words[_pressed].set_visible(false);//Makes the pressed letter invisible, so the player knows they pressed the correct one
-             _sprite.set_y(_sprite.y() - reel);//Reels the fish up one chunk (Note, Butanos Y axis is flipped)
+             _sprite.set_y(_sprite.y() - _reel);//Reels the fish up one chunk (Note, Butanos Y axis is flipped)
             _pressed++;} 
 
-            //After all 3 are pressed, spawn a new batch
-        if (_pressed == 3)
+            //After all 3 buttons are pressed, spawn a new batch
+        if (_pressed == _buttons)
         {
             sequence(random, text_generator);   //If the player gets 3 presses correct, 
                                                 //gives a new batch of letters to press

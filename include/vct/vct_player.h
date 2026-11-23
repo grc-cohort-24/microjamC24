@@ -31,14 +31,17 @@ class player {
         //Player sprite
         bn::sprite_ptr _sprite;
         
-        //The max amount of buttons needed to be pressed
+        //The max amount of buttons needed to be pressed (also where they're stored)
         int _max[15];   
+
+        //Max amount of buttons ON SCREEN
+        int _buttons = 3;
         
-        //How many buttons needed to be pressed for this round
-        int _length;
+        //Roughly how many buttons needed to be pressed for this round (scaled based on difficulty)
+        int _level;
 
         //The length that the fish sprite will be reeled up on the screen
-        int reel;
+        int _reel;
 
         //The amount of currently correctly pressed keys
         int _pressed = 0;        

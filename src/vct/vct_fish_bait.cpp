@@ -48,11 +48,11 @@ namespace vct
         }
         else if(difficulty == mj::difficulty_level::NORMAL)
         {
-            return 12;
+            return 13;
         }
         else
         {
-            return 16;
+            return 18;
         }
     }
     
