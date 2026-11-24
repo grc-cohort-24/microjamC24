@@ -2,10 +2,12 @@
 
 #include <bn_regular_bg_ptr.h>
 #include <bn_sprite_ptr.h>
+#include <bn_random.h>
 
 #include "mj/mj_game.h"
 #include "mck_player.h"
 #include "mck_enemy.h"
+#include "mck_urchin.h"
 
 namespace mck {
 
@@ -24,8 +26,24 @@ namespace mck {
         private:
         // The character that the player can move
         player _player;
-        enemy _enemy;
+        static constexpr int TOTAL_FRAMES = 600;
+        static constexpr int WAVE_INTERVAL_FRAMES = 50;
+        static constexpr int ENEMIES_PER_WAVE = 3;
+        static constexpr int MAX_ENEMIES = 40;
+        bn::vector<enemy, MAX_ENEMIES> _enemies;
+        urchin _urchin;
+        bn::random rand_spawn;
         bool _hit = false;
+        int _timer = 0;
+        bn::fixed _enemy_speed;
+
+        // Determines Enemy speed
+        bn::fixed enemy_speed(mj::difficulty_level difficulty);
+
+        /**
+         * selects a location for the urchin
+         */
+        bn::fixed_point urchin_location();
     };
 
 }
