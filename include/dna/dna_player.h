@@ -3,8 +3,9 @@
 #include <bn_display.h>
 #include <bn_rect.h>
 #include <bn_sprite_ptr.h>
+#include <bn_optional.h>
 
-
+#include "dna_harpoon.h"
 
 namespace dna {
     static constexpr bn::size PLAYER_SIZE = {8, 8};
@@ -21,7 +22,8 @@ namespace dna {
             Player(bn::fixed_point starting_pos, bn::fixed speed, bn::size size);
             void update(); 
 
-            bn::rect get_hitbox(); 
+            bn::rect getHitbox() const; 
+            const bn::optional<Harpoon>& getHarpoon() const; 
 
         private: 
             bn::sprite_ptr _sprite; 
@@ -29,6 +31,9 @@ namespace dna {
             bn::size _size; 
             bn::rect _hitbox;
 
-            void _update_position(); 
+            bn::optional<Harpoon> _harpoon; 
+
+            void _updatePosition(); 
+            void _updateHarpoon(); 
     };
 }

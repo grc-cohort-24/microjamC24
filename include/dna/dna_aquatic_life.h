@@ -17,12 +17,18 @@ namespace dna {
             
             bool update(Player &player);
             bool is_offscreen() const; 
+            bn::sprite_ptr Enemy (bn::random &random);
         
+            bn::rect getHitbox() const; 
             bn::fixed_point getStartPosition(bn::random &random); 
         private: 
-            bn::sprite_ptr _sprite;  
+            bn::sprite_ptr _sprite;   
             bn::fixed _speed; 
             bn::rect _hitbox;
             bn::size _size;
     };
+
+
+    
+      
 }

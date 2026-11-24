@@ -15,10 +15,11 @@ namespace dna {
     _hitbox(create_hitbox(_sprite, size)) {}
     
     void Player::update() {
-        _update_position(); 
+        _updatePosition(); 
+        _updateHarpoon(); 
     }
 
-    void Player::_update_position() {
+    void Player::_updatePosition() {
         // Player Movement
         if (bn::keypad::left_held()) {
             _sprite.set_x(_sprite.x() - _speed);
@@ -50,7 +51,25 @@ namespace dna {
         _hitbox = create_hitbox(_sprite, _size);
     }
 
-    bn::rect Player::get_hitbox() {
+    void Player::_updateHarpoon() {
+        if (bn::keypad::a_pressed() && !_harpoon) {
+            _harpoon.emplace(_sprite.position(), HARPOON_SPEED, HARPOON_SIZE);
+        }
+
+        if (_harpoon) {
+            _harpoon->update();
+            
+            if (_harpoon->is_offscreen()) {
+                _harpoon.reset();
+            }
+        }
+    }
+
+    bn::rect Player::getHitbox() const {
         return _hitbox;
+    }
+
+    const bn::optional<Harpoon>& Player::getHarpoon() const {
+        return _harpoon; 
     }
 }
