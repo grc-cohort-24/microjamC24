@@ -39,7 +39,11 @@ namespace gam {
             _ship_x_coords.push_back(start_x);
         }
 
-
+        // Start every square hidden so the board does not reveal ship locations.
+        for (bn::sprite_ptr& sprite : _ship_sprites)
+        {
+            sprite.set_visible(false);
+        }
 
     }
     
@@ -100,16 +104,85 @@ namespace gam {
             }
 
             if(column == filled_column && row == filled_row) { // If the ship is hit ..
+                // Ship is hit and is now sunk
                 _ship_hit = true;
 
-                for (bn::sprite_ptr& sprite : _ship_sprites) {
-                    sprite.set_visible(false); // Hides the current square
-                }
+                // Start the animation process at the flash frame
+                _frames_since_hit = 0;
+                _show_ship_frame(_flash_sprite);
 
-                return true; // Ship was hit so return true
+                return true; 
             }
         }
 
         return false; // Missed so return false
+    }
+
+    void gam_ship::update_visibility(int selected_column, int selected_row) {
+        for (int i = 0; i < _ship_size; i++) {
+            int ship_cell_column;
+            int ship_cell_row;
+        
+            if(_ship_horizontal) {
+                // Horizontal cells share a row and have different columns
+                ship_cell_column = _ship_x_coords[i];
+                ship_cell_row = _ship_y_coords[0];
+            }
+            else {
+                // Vertical segments share a column and have different rows
+                ship_cell_column = _ship_x_coords[0];
+                ship_cell_row = _ship_y_coords[i];
+            }
+            
+            bool isSelected = false;
+            // Select this cell only when the column and row match the position of a ship
+            if (ship_cell_column == selected_column && ship_cell_row == selected_row) {
+                isSelected = true;
+            }
+
+            // Sunk ships always stay visible. Unsunk ships need to be selected to become visible
+            if (_ship_hit || isSelected) {
+                _ship_sprites[i].set_visible(true);
+            }
+            else {
+                _ship_sprites[i].set_visible(false);
+            }
+        }
+    }
+
+    void gam_ship::_show_ship_frame(int frame_index) {
+        for (bn::sprite_ptr& sprite : _ship_sprites) {
+            // Change the frame that is visible
+            sprite.set_tiles(bn::sprite_items::gam_ship.tiles_item(), frame_index);
+            sprite.set_visible(true);
+        }
+    }
+
+    bool gam_ship::animation_is_running() const {
+        // Animation will only run after a ship is hit and will stop once 8 frames have passed
+        if (_ship_hit && _frames_since_hit < _frames_per_animation * 3) { // * 3 because there is 3 animations to get through
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    void gam_ship::update_animation() {
+        // Do not advance the animations while it is unsunk
+        if (!animation_is_running()) {
+            return;
+        }
+
+        _frames_since_hit++;
+
+        if (_frames_since_hit == _frames_per_animation) {
+            // Flash should show first then switch to fire after 8 frames
+            _show_ship_frame(_fire_sprite);
+        }
+        else if (_frames_since_hit == _frames_per_animation * 2) {
+            // Switch to wrecked ship image which will stay visible
+            _show_ship_frame(_wreck_sprite);
+        }
     }
 }
