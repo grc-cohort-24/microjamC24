@@ -10,7 +10,7 @@ namespace aab
     class Dolphin
     {
     public:
-        Dolphin(bn::fixed_point starting_position);
+        Dolphin(bn::fixed_point starting_position, bn::fixed dolphin_speed);
 
         void update();
         void set_camera(const bn::camera_ptr& camera);
@@ -20,7 +20,7 @@ namespace aab
     private:
         bn::sprite_ptr _sprite;
         bn::sprite_animate_action<6> _animate;
-        bn::fixed _speed = 0.5;
+        bn::fixed _speed;
 
         void _update_position(bn::fixed dolphin_speed);
     };

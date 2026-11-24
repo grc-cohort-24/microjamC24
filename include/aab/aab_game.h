@@ -8,6 +8,8 @@
 #include "aab/aab_swimmer.h"
 #include "aab/aab_obstacle.h"
 
+#include "bn_camera_ptr.h"
+
 namespace aab
 {
     class aab_game : public mj::game
@@ -68,6 +70,13 @@ namespace aab
          */
         void fade_out(const mj::game_data &data) override;
 
+
+        //setting amount of obstacles that spawn with difficulty level
+        static int obstacle_amount(mj::difficulty_level difficulty);
+
+        //setting dolphin speed level according to difficulty level
+        bn::fixed recommended_dolphin_speed(mj::difficulty_level difficulty);
+
     private:
         Dolphin _dolphin;
         Swimmer _swimmer;
@@ -75,6 +84,5 @@ namespace aab
         bn::regular_bg_ptr _background;
         bn::camera_ptr _camera;
         int _slow_timer;
-        static constexpr int _collison_radius = 12;
     };
 }
