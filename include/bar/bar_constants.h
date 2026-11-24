@@ -1,5 +1,5 @@
 #pragma once
 
 namespace bar {
-    inline constexpr int MAX_BOUNCERS = 5;
+    inline constexpr int MAX_COINS = 10;
 }

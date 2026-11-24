@@ -7,7 +7,7 @@
 #include <bn_rect.h>
 #include <bn_keypad.h>
 
-#include "bar_bouncer.h"
+#include "bar_coin.h"
 #include "bar_create_bounding_box.h"
 
 #include "bn_sprite_items_bar_box.h"
@@ -28,7 +28,9 @@ namespace bar
         /**
          * Reads from the bumpers and triggers one of the arms to move.
          */
-        void update(bar_bouncer &bouncer);
+        void update_lower_left(bar_coin &coins);
+
+        void update_lower_right(bar_coin &coins);
 
     private:
         // The sprite to display the player

@@ -2,16 +2,17 @@
 
 #include <bn_sprite_ptr.h>
 #include <bn_display.h>
+#include <bn_sprite_animate_actions.h>
 
 #include "mj/mj_game.h"
 
 #include "bar/bar_create_bounding_box.h"
 
-#include "bn_sprite_items_bar_bouncer.h"
+#include "bn_sprite_items_bar_coin.h"
 
 namespace bar
 {
-    class bar_bouncer
+    class bar_coin
     {
     public:
         /**
@@ -21,13 +22,15 @@ namespace bar
          *  @param start_x The starting x coordinate the bouncer spawns at
          *  @param start_y The starting y coordinate the bouncer spawns at
          */
-        bar_bouncer(bn::fixed x_start, bn::fixed y_start, bn::fixed base_speed, bn::size bouncer_size);
+        bar_coin(bn::fixed x_start, bn::fixed y_start, bn::fixed base_speed, bn::size coin_size);
 
         /**
          *  Updates the position of the Bouncer sprite by checking whether or not it's position is greater
          * than the bounds of the screen.
          */
         void update();
+
+        bn::sprite_ptr get_sprite() const;
 
         bn::rect get_bounding_box() const;
 
@@ -44,6 +47,7 @@ namespace bar
         static constexpr int MIN_Y = -bn::display::height() / 2;
 
         bn::sprite_ptr _sprite;
+        bn::sprite_animate_action<4> coin_animation;
         bn::fixed _vertical_speed;
         bn::size _size;
         bn::rect _bounding_box;
