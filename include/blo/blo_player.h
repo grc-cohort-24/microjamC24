@@ -2,20 +2,20 @@
 
 #include "blo_shark.h"
 
-namespace blo {
+namespace blo
+{
+    class player
+    {
+    public:
+        /**
+         * player constructor
+         */
+        player(bn::fixed_point starting_position);
 
-    class player {
-        public:
-            /**
-             * player constructor
-             */
-            player();
+        void update(shark &shark);
 
-            void update(shark& target);
-
-            bool hasSnack() const;
-        private:
-            bool _has_snack = true;
+    private:
+        bn::sprite_ptr _sprite;
     };
 
 }

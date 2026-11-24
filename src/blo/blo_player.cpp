@@ -3,25 +3,23 @@
 
 #include <bn_keypad.h>
 
-namespace blo {
+#include "bn_sprite_items_blo_player.h"
+
+namespace blo
+{
     /**
      * player constructor
      */
-    player::player()
+    player::player(bn::fixed_point starting_position) : _sprite(bn::sprite_items::blo_player.create_sprite(starting_position))
     {
     }
 
-    void player::update(shark& target) {
-        if (bn::keypad::a_pressed()){
-            if(target.isEmerged()){
-                target.punch();
-            }
+    void player::update(shark &shark)
+    {
+        if (bn::keypad::a_pressed())
+        {
+            shark.bonk();
         }
-    }
-
-    bool player::hasSnack() const {
-        return _has_snack;
-
     }
 
 }

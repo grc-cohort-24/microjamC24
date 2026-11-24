@@ -2,10 +2,12 @@
 
 #include "mj/mj_game_list.h"
 
+#include "bn_regular_bg_items_blo_ocean_bg.h"
+
 namespace
 {
     constexpr bn::string_view code_credits[] = {"Brandon Mitzel", "Logan Highley"};
-    constexpr bn::string_view graphics_credits[] = {""};
+    constexpr bn::string_view graphics_credits[] = {"Brandon Mitzel", "Logan Highley"};
     constexpr bn::string_view sfx_credits[] = {""};
     constexpr bn::string_view music_credits[] = {""};
 }
@@ -25,10 +27,13 @@ namespace blo
      * @param completed_games how many microgames the player has completed so far
      * @param data shared information, such as a rng and number of frames left in the microgame
      */
-    blo_SharkASnack::blo_SharkASnack([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data &data) : 
-    mj::game("blo"),
-    _player(player()),
-    _shark(shark({0, 0}))
+    blo_SharkASnack::blo_SharkASnack([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data &data) : mj::game("blo"),
+                                                                                                                         _player(player({28, -10})),
+                                                                                                                         _shark(shark({-10, 20},
+                                                                                                                                      _window_for(recommended_difficulty_level(completed_games, data)),
+                                                                                                                                      _fakeout_for(recommended_difficulty_level(completed_games, data)),
+                                                                                                                                      _seal_fakeout(recommended_difficulty_level(completed_games, data), data))),
+                                                                                                                         _background(bn::regular_bg_items::blo_ocean_bg.create_bg())
     {
     }
 
@@ -43,13 +48,43 @@ namespace blo
     };
 
     /**
+     * Returns the frame timing for the given dificulty
+     */
+    int blo_SharkASnack::_window_for(mj::difficulty_level difficulty)
+    {
+        if (difficulty == mj::difficulty_level::HARD)
+        {
+            return 20; // 0.33 seconds
+        }
+        else
+        {
+            return 41; // 0.69 seconds
+        }
+    };
+
+    /**
+     * If the dificulty is normal or above the shark gains a fakeout
+     */
+    bool blo_SharkASnack::_fakeout_for(mj::difficulty_level difficulty)
+    {
+        return difficulty != mj::difficulty_level::EASY;
+    };
+
+    // Checks if the seal is going to pop up instead of shark
+    bool blo_SharkASnack::_seal_fakeout(mj::difficulty_level difficulty, [[maybe_unused]] const mj::game_data &data)
+    {
+        // 50% chance for a seal round to accure on hard difficulty
+        return difficulty == mj::difficulty_level::HARD && data.random.get_int(2) == 0;
+    };
+
+    /**
      * How long the timer for the game should be set to in frames.
      *
      * 60 frames is approx 1 second
      */
     int blo_SharkASnack::total_frames() const
     {
-        return 600;
+        return 600; // 10 seconds
     };
 
     /**
@@ -63,7 +98,7 @@ namespace blo
         _player.update(_shark);
         _shark.update();
 
-        mj::game_result result(victory(), false);
+        mj::game_result result(victory() || _shark.snack_stolen(), false);
         return result;
     };
 
@@ -73,7 +108,7 @@ namespace blo
      */
     bool blo_SharkASnack::victory() const
     {
-        return _shark.punched();
+        return _shark.bonked() || _shark.seal_survived();
     };
 
     /**
