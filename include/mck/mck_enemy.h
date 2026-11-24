@@ -4,29 +4,31 @@
 #include <bn_sprite_ptr.h>
 #include <bn_display.h>
 #include <bn_rect.h>
+#include <bn_random.h>
+#include <bn_sprite_animate_actions.h>
+
+#include "mj/mj_game.h"
+#include "mck/mck_bounds.h"
 
 // All game functions/classes/variables/constants scoped to the namespace
 namespace mck {
 
 /**
- * A character controlled with the d-pad.
+ * An obstacle character not controlled by the player.
  */
 class enemy {
         // The bounds of the screen
-        static constexpr int MAX_X = bn::display::width() / 2;
-        static constexpr int MIN_X = - bn::display::width() / 2;
-        static constexpr int MAX_Y = bn::display::height() / 2;
-        static constexpr int MIN_Y = - bn::display::height() / 2;
+        static constexpr int SPAWN_MARGIN = 16; 
+        static constexpr int NUM_SIDES = 4;
 
     public:
         /**
          * enemy constructor
          * 
-         * @param starting_position the location to start the enemy at
-         * @param xspeed the enemy's speed in the x direction
-         * @param yspeed the enemy's speed in the y direction
+         * @param speed the enemy's speed
+         * @param data the current game data, used for random number generation
          */
-        enemy(bn::fixed_point starting_position, bn::fixed xspeed, bn::fixed yspeed);
+        enemy(bn::fixed speed, bn::random& random);
 
         bn::rect hitbox() const;
 
@@ -41,6 +43,8 @@ class enemy {
         // The pixels/frame the enemy moves in each dimension
         bn::fixed _xspeed;
         bn::fixed _yspeed;
+        // The animation for the enemy
+        bn::sprite_animate_action<3> _animation;
 
         /**
          * Moves the enemy based on its current x and y speeds

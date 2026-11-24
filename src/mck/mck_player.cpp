@@ -1,13 +1,16 @@
 #include "mck/mck_player.h"
 
 #include <bn_keypad.h>
+#include <bn_sprite_animate_actions.h>
 
-#include "bn_sprite_items_mck_urchin.h"
+#include "bn_sprite_items_mck_fish.h"
 
 #include "bn_sound_items.h"
+#include "mck/mck_bounds.h"
 
 // All game functions/classes/variables/constants scoped to the namespace
 namespace mck {
+    // The bounds of the screen
 
 /**
  * player constructor
@@ -16,13 +19,29 @@ namespace mck {
  * @param speed the pixels/frame the player moves at in each dimension
  */
 player::player(bn::fixed_point starting_position, bn::fixed speed) :
-    _sprite(bn::sprite_items::mck_urchin.create_sprite(starting_position)),
-    _speed(speed)
+    _sprite(bn::sprite_items::mck_fish.create_sprite(starting_position)),
+    _speed(speed),
+    _animation(bn::create_sprite_animate_action_forever(_sprite, 8, bn::sprite_items::mck_fish.tiles_item(),0,1))
     {}
 
 
 void player::update() {
     _update_position();
+    _fish_animation();
+    
+    // Border
+    if (_sprite.y() < MIN_Y){
+        _sprite.set_y(MIN_Y + 5);
+    }
+    if (_sprite.y() > MAX_Y){
+        _sprite.set_y(MAX_Y - 5);
+    }
+    if (_sprite.x() < MIN_X){
+        _sprite.set_x(MIN_X + 5);
+    }
+    if (_sprite.x() > MAX_X ){
+        _sprite.set_x(MAX_X - 5);
+    }
 }
 
 /**
@@ -44,7 +63,24 @@ void mck::player::_update_position() {
 }
 
 bn::rect player::hitbox() const {
-    return bn::rect(_sprite.x().integer(), _sprite.y().integer(), 16, 16);
+    return bn::rect(_sprite.x().integer(), _sprite.y().integer(), 8, 8);
+}
+
+void mck::player::_fish_animation(){
+    if(bn::keypad::left_held()) {
+        _animation = bn::create_sprite_animate_action_forever(_sprite, 8, bn::sprite_items::mck_fish.tiles_item(),2,3);
+    }
+    if(bn::keypad::right_held()) {
+        _animation = bn::create_sprite_animate_action_forever(_sprite, 8, bn::sprite_items::mck_fish.tiles_item(),0,1);
+    }
+    if(bn::keypad::up_held()) {
+        _animation = bn::create_sprite_animate_action_forever(_sprite, 8, bn::sprite_items::mck_fish.tiles_item(),4,5);
+    }
+    if(bn::keypad::down_held()) {
+        _animation = bn::create_sprite_animate_action_forever(_sprite, 8, bn::sprite_items::mck_fish.tiles_item(),6,7);
+    }
+
+    _animation.update();
 }
 
 }

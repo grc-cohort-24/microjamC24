@@ -2,6 +2,7 @@
 
 #include <bn_fixed_point.h>
 #include <bn_sprite_ptr.h>
+#include <bn_sprite_animate_actions.h>
 #include <bn_display.h>
 #include <bn_rect.h>
 
@@ -12,11 +13,6 @@ namespace mck {
  * A character controlled with the d-pad.
  */
 class player {
-        // The bounds of the screen
-        static constexpr int MAX_X = bn::display::width() / 2;
-        static constexpr int MIN_X = - bn::display::width() / 2;
-        static constexpr int MAX_Y = bn::display::height() / 2;
-        static constexpr int MIN_Y = - bn::display::height() / 2;
 
     public:
         /**
@@ -40,10 +36,14 @@ class player {
         // The pixels/frame the player moves in each dimension
         bn::fixed _speed;
 
+        bn::sprite_animate_action<2> _animation;
+
         /**
          * Reads from the d-pad and moves the player by one frame accordingly.
          */
         void _update_position();
+
+        void _fish_animation();
         
 };
 
