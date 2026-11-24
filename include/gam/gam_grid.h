@@ -44,5 +44,14 @@ namespace gam {
       int _grid_columns;
       int _grid_rows;
       bn::vector<gam::gam_ship, MAX_SHIPS> _ships;
+
+      /**
+       * @param first_column starting column for new ship
+       * @param first_row starting row for new ship
+       * @param size size of new ship
+       * @param horizontal orientation of new ship
+       * @return whether any ship occupies specified grid areas
+       */
+      bool occupied(int first_column, int first_row, int size, bool horizonal);
   };
 }
