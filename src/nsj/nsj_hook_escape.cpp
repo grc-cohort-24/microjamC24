@@ -2,6 +2,7 @@
 #include "mj/mj_game_list.h"
 #include "nsj_Enemy.h"
 #include "nsj_boundingBox.h"
+#include "bn_regular_bg_items_nsj_background.h"
 
 namespace
 {
@@ -21,12 +22,23 @@ namespace nsj
 {
    nsj_hook_escape::nsj_hook_escape([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data &data) : mj::game("nsj"),
                                                                                                                         _player({0, 0}, 2),
-                                                                                                                        _Shark(-80, -40, _recommended_shark_speed(recommended_difficulty_level(completed_games, data)))
+                                                                                                                        _background(bn::regular_bg_items::nsj_background.create_bg(0, 0))
+
    {
+      mj::difficulty_level difficulty =
+          recommended_difficulty_level(completed_games, data);
+
       bn::fixed speed = _recommended_hook_speed(recommended_difficulty_level(completed_games, data));
 
-      _enemies.push_back(Enemy(30, -30, speed, data.random));
-      _enemies.push_back(Enemy(-100, 30, speed + 0.5, data.random));
+      _enemies.push_back(Enemy(30, -30, speed, -speed, data.random));
+      _enemies.push_back(Enemy(-100, 40, speed + 0.5, speed, data.random));
+      _enemies.push_back(Enemy(100, -40, speed, -speed, data.random));
+      if (difficulty == mj::difficulty_level::NORMAL ||
+          difficulty == mj::difficulty_level::HARD)
+      {
+         _sharks.push_back(
+             Shark(-80, -40, _recommended_shark_speed(difficulty)));
+      }
    }
 
    bn::string<16> nsj_hook_escape::title() const
@@ -38,20 +50,20 @@ namespace nsj
    {
       if (difficulty == mj::difficulty_level::EASY)
       {
-         return 1.5;
+         return .50;
       }
       else if (difficulty == mj::difficulty_level::NORMAL)
       {
-         return 2;
+         return .75;
       }
-      return 2.5;
+      return 1;
    }
 
    bn::fixed nsj_hook_escape::_recommended_shark_speed(mj::difficulty_level difficulty)
    {
       if (difficulty == mj::difficulty_level::EASY)
       {
-         return .5;
+         return .50;
       }
       else if (difficulty == mj::difficulty_level::NORMAL)
       {
@@ -67,6 +79,7 @@ namespace nsj
 
    mj::game_result nsj_hook_escape::play([[maybe_unused]] const mj::game_data &data)
    {
+
       _player.update();
       for (int i = 0; i < _enemies.size(); i++)
       {
@@ -77,12 +90,15 @@ namespace nsj
             _hooked = true;
          }
       }
-      _Shark.update(_player);
 
-      if (
-          _Shark.get_bounding_box().intersects(_player.get_bounding_box()))
+      for (Shark &shark : _sharks)
       {
-         _hooked = true;
+         shark.update(_player);
+
+         if (shark.get_bounding_box().intersects(_player.get_bounding_box()))
+         {
+            _hooked = true;
+         }
       }
 
       // Creates a game result indicating whether the game is finished and whether the title should be hidden early

@@ -43,7 +43,7 @@ namespace nsj
     private:
         // The sprite to display the player
         bn::sprite_ptr _sprite;
-        bn::sprite_animate_action<4> _sprite_action;
+        bn::sprite_animate_action<2> _sprite_action;
         bn::size _size;
         bn::fixed _speed;
         bn::rect _bounding_box;
