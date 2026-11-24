@@ -1,29 +1,110 @@
 #include "aab/aab_obstacle.h"
-#include "bn_sprite_items_aab_log.h"
+
+#include <bn_random.h>
 #include <bn_camera_ptr.h>
+#include "bn_sprite_items_aab_explosion.h"
 
 namespace aab
 {
-    Obstacle::Obstacle(bn::fixed_point starting_position) : 
-        _sprite(bn::sprite_items::aab_log.create_sprite(starting_position))
+    Obstacle::Obstacle(bn::sprite_item log, bn::sprite_item rock, int spawn_amount, bn::random& random)
     {
+        random.update();
+        for(int i =0; i < spawn_amount; i++){
+            // Space each obstacle into its own x range so they don't stack
+            int range_start = 100 + (i * 100);
+            int range_end = range_start + 100;
+
+            if (range_start < _obstacle_min_width)
+            {
+                range_start = _obstacle_min_width;
+            }
+            if (range_end > _obstacle_max_width)
+            {
+                range_end = _obstacle_max_width;
+            }
+            if (range_end < range_start)
+            {
+                range_start = _obstacle_min_width;
+                range_end = _obstacle_max_width;
+            }
+            //random coordinates
+            //a) should be within swimmer's bound
+            //b) should be good amount of space away from swimmer's spawn
+            int x = random.get_unbiased_int(range_start, range_end);
+            int y = random.get_unbiased_int(_swimmer_min_height, _swimmer_max_height);
+            
+            if(random.get_bool()){
+                bn::sprite_ptr s = log.create_sprite(x, y);
+                s.set_bg_priority(2);
+                _sprites.push_back(s);
+            }
+            else{
+                bn::sprite_ptr s = rock.create_sprite(x, y);
+                s.set_bg_priority(2);
+                _sprites.push_back(s);
+            }
+        }   
     }
 
-    void Obstacle::update()
+    void Obstacle::update(Swimmer &_swimmer, int &_slow_timer)
     {
         // You can leave it static or add movement here if desired
+        _collisionCheck(_swimmer, _slow_timer);
+
+        if(_explosion){
+
+            _explosion_timer++;
+            //set up manual animation
+            if (_explosion_timer >= 10 && _explosion_timer < 20)
+            {
+                _explosion.value().set_item(bn::sprite_items::aab_explosion, 1);
+            }
+            else if (_explosion_timer >= 20 && _explosion_timer < 30)
+            {
+                _explosion.value().set_item(bn::sprite_items::aab_explosion, 2);
+            }
+            else if (_explosion_timer >= 30 && _explosion_timer < 35)
+            {
+                _explosion.value().set_item(bn::sprite_items::aab_explosion, 3);
+            }
+            else if (_explosion_timer >= 35){
+                _explosion.reset();
+            }
+        }
     }
 
+    //right now, we have setters and getters for1 sprite. we want our
+    //obstacle setter and getters to be able to apply camera/ obstacle. and we wont need getters.
     void Obstacle::set_camera(const bn::camera_ptr& camera){
-        _sprite.set_camera(camera);
+        for(bn::sprite_ptr& sprite : _sprites)
+        {
+            sprite.set_camera(camera);
+        }
     }
 
-    bn::fixed Obstacle::x() const{
-        return _sprite.x();
-    }
+    void Obstacle::_collisionCheck(Swimmer &_swimmer, int &_slow_timer){
+        int counter = 0;
+        for(bn::sprite_ptr& sprite : _sprites)
+        {   
+            if (_slow_timer == 0 &&
+                _swimmer.x() > sprite.x() - _collison_radius && _swimmer.x() < sprite.x() + _collison_radius &&
+                _swimmer.y() > sprite.y() - _collison_radius && _swimmer.y() < sprite.y() + _collison_radius)
+            {
+                //switch to explosion sprite
+                sprite.set_item(bn::sprite_items::aab_explosion, 0);
+                //point to sprite
+                _explosion = sprite;
+                _explosion_timer = 0;
 
-    bn::fixed Obstacle::y() const{
-        return _sprite.y();
-    }
+                //go through animation once
+                //delete the sprite
+                _sprites.erase(_sprites.begin() + counter);
+                _swimmer.slow_down();
 
+                //counter is off, will cause error. break
+                break;
+            }
+            counter++;
+        }
+    }
 }

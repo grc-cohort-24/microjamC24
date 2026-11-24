@@ -2,6 +2,8 @@
 
 #include "mj/mj_game_list.h"
 #include "bn_regular_bg_items_aab_oceanbg.h"
+#include "bn_sprite_items_aab_log.h"
+#include "bn_sprite_items_aab_rock.h"
 
 // String arrays for the credits can go in an anonymous namespace
 namespace
@@ -14,6 +16,7 @@ namespace
     constexpr bn::fixed_point dolphin_start_pos = {-100, -20};
     constexpr bn::fixed_point swimmer_start_pos = {-120, 30};
     constexpr bn::fixed_point obstacle_start_pos = {0, 35};
+    constexpr int min_victory_x = 150;
     
 }
 
@@ -36,9 +39,10 @@ namespace aab
      * @param data shared information, such as a rng and number of frames left in the microgame
      */
     aab_game::aab_game([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data &data) : mj::game("aab"),
-                                                                                                            _dolphin(Dolphin({dolphin_start_pos})),
+                                                                                                           _dolphin(Dolphin({dolphin_start_pos}, recommended_dolphin_speed(recommended_difficulty_level(completed_games, data)))),
                                                                                                            _swimmer(Swimmer({swimmer_start_pos})),
-                                                                                                           _obstacle(Obstacle({obstacle_start_pos})),
+                                                                                                           _obstacle(Obstacle(bn::sprite_items::aab_log, bn::sprite_items::aab_rock, obstacle_amount(recommended_difficulty_level(completed_games, data)), data.random)),
+                                                                                                           _button(Button({-120,-50})),
                                                                                                            _background(bn::regular_bg_items::aab_oceanbg.create_bg()),
                                                                                                            _camera(bn::camera_ptr::create(0, 0)),
                                                                                                            _slow_timer(0)
@@ -46,19 +50,40 @@ namespace aab
         //Attach camera to spites once upon creation
         _dolphin.set_camera(_camera);
         _swimmer.set_camera(_camera);
+        _swimmer.arrows_set_camera(_camera);
         _background.set_camera(_camera);
         _obstacle.set_camera(_camera);
+        _button.set_camera(_camera);
     }
-
     /**
      * The instructions given to the player at the beginning of the microgame.
      *
      * Must be <= 16 characters long
-     * TODO: SWITCH TITLE & FIND A BETTER WAY TO SHOW MOVEMENT. POSSIBLY ADDING NEW SPRITES FROM WAVE 7
+     * TODO: POSSIBLY ADDING NEW SPRITES FROM WAVE 7
      */
     bn::string<16> aab_game::title() const
     {
         return "Mash A to Swim!";
+    }
+
+    //the more games the player has completed, the more obstacles that will spawn.
+    int aab_game::obstacle_amount(mj::difficulty_level difficulty) 
+    {
+        if(difficulty == mj::difficulty_level::EASY) {
+        return 1;
+    } else if (difficulty == mj::difficulty_level::NORMAL) {
+        return 3;
+    } 
+    return 4;
+    }
+
+    bn::fixed aab_game::recommended_dolphin_speed(mj::difficulty_level difficulty) {
+    if(difficulty == mj::difficulty_level::EASY) {
+        return _easy_dolphin_speed;
+    } else if (difficulty == mj::difficulty_level::NORMAL) {
+        return _normal_dolphin_speed;
+    } 
+    return _hard_dolphin_speed;
     }
 
     /**
@@ -68,7 +93,7 @@ namespace aab
      */
     int aab_game::total_frames() const
     {
-        return 300; // 300 frames at 60fps = 5 seconds
+        return 360; // 360 frames at 60fps = 6 seconds
     }
 
     /**
@@ -87,22 +112,17 @@ namespace aab
         // add in dolphin
         _dolphin.update();
         _swimmer.update();
-        _obstacle.update();
+        _button.update(_swimmer.x());
+        _obstacle.update(_swimmer, _slow_timer);
 
         // updating camera
         _camera.set_position(_swimmer.x(), 0);
 
-        // Simple Obstacle Collion Check
-        if (_slow_timer == 0 &&
-            _swimmer.x() > _obstacle.x() - _collison_radius && _swimmer.x() < _obstacle.x() + _collison_radius &&
-            _swimmer.y() > _obstacle.y() - _collison_radius && _swimmer.y() < _obstacle.y() + _collison_radius)
-        {
-            _swimmer.slow_down();
-        }
         // Creates a game result indicating whether the game is finished and whether the title should be hidden early
         mj::game_result result(victory(), false);
         return result;
     }
+    
 
     /**
      * Returns whether the player has won the microgame.
@@ -111,7 +131,7 @@ namespace aab
      */
     bool aab_game::victory() const
     {
-        return _swimmer.x() > _dolphin.x() && (_swimmer.x() > 0);
+        return _swimmer.x() > _dolphin.x() && (_swimmer.x() > _finish_line_x);
     }
 
     /**
