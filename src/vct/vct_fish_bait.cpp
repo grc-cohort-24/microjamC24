@@ -24,7 +24,7 @@ namespace vct
     vct_fish_bait::vct_fish_bait([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data& data) : mj::game("vct"),
     _bg(bn::regular_bg_items::vct_background.create_bg(0, 0)),
     _player({20, 20}, _recommended_buttons(
-        recommended_difficulty_level(completed_games * 8, data))) 
+        recommended_difficulty_level(completed_games, data))) 
         //I'm still not entirely sure what the amount of
         //completed games is to move onto the next level is.
         //I've experimented with different multiplier numbers for about 30 minutes and 8
@@ -33,7 +33,7 @@ namespace vct
     {
     }
 
-    //Game title/ the instructions to give to the player
+    //Game title/ the instructions to give to the player, weird instructions keeping it 16 letters
     bn::string<16> vct_fish_bait::title() const 
     {
         return "Hit the buttons!";
