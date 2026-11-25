@@ -1,17 +1,19 @@
 #pragma once 
 
+#include <bn_regular_bg_ptr.h>
+
 #include "mj/mj_game.h"
 #include "bnc/bnc_squid.h"
 #include "bnc/bnc_whale.h"
+#include "bnc/bnc_bubbles.h"
 
 
 namespace bnc {
-
     class bnc_squid_escape : public mj::game {
 
         public:
          /**
-         * Constructor for an instance of an bnc_fish_escape
+         * Constructor for an instance of an bnc_squid_escape
          * 
          * @param completed_games how many microgames the player has completed so far
          * @param data shared information, such as a rng and number of frames left in the microgame
@@ -67,17 +69,29 @@ namespace bnc {
         void fade_out(const mj::game_data& data) override;
 
         private:
+
+        //int enemy_timer = 0;
         // The character that the player can move
         Squid _squid;
 
         //whale vector
         static constexpr int MAX_WHALES = 9;
+
+        static constexpr int MAX_BUBBLES = 6;
+
+        //background
+        bn::regular_bg_ptr _background;
         
         //whale vector;
         bn::vector<Whale, MAX_WHALES> _whale_vector = {};
 
+        //bubble vector;
+        bn::vector<Bubbles, MAX_BUBBLES> _bubble_vector = {};
+
         // Returns progressively more whales the harder the difficulty
         int _whale_increase(mj::difficulty_level difficulty);
 
+        //timer that will indicate when the game starts
+        int timer;
     };
 }

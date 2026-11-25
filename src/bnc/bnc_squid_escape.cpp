@@ -6,6 +6,11 @@
 #include "mj/mj_game_list.h"
 #include "bnc/bnc_squid.h"
 #include "bnc/bnc_whale.h"
+#include <bn_log.h>
+
+#include "bn_regular_bg_items_bnc_ocean_bg.h"
+
+
 
 // String arrays for the credits can go in an anonymous namespace
 namespace
@@ -23,8 +28,10 @@ MJ_GAME_LIST_ADD_GRAPHICS_CREDITS(graphics_credits)
 MJ_GAME_LIST_ADD_MUSIC_CREDITS(music_credits)
 MJ_GAME_LIST_ADD_SFX_CREDITS(sfx_credits)
 
+
 namespace bnc
 {
+
     /**
  * Constructor for an instance of an bnc_squid_escape
  * 
@@ -36,16 +43,33 @@ namespace bnc
     bnc_squid_escape::bnc_squid_escape(
         int completed_games,
         const mj::game_data& data) : mj::game("bnc"), 
-        _squid(bn::fixed_point(X_START, Y_START), SPEED)
-    {
+        _squid(bn::fixed_point(X_START, Y_START), SPEED),
+        _background(bn::regular_bg_items::bnc_ocean_bg.create_bg())    {
 
-        while(_whale_vector.size() < _whale_increase(recommended_difficulty_level(completed_games, data))) {
+        for(int i = 0; i <_whale_increase(recommended_difficulty_level(completed_games, data)); i++) {
             _whale_vector.push_back(Whale(
             data.random.get_unbiased_fixed(MIN_X, MAX_X),
             data.random.get_unbiased_fixed(MIN_Y, MAX_Y),
             WHALE_SPEED));
+
+            // TODO: 
+            // If whales are too close, relocate them
+            // As of now, this if statement breaks the game
+            // Not sure where I went wrong and need feedback
+            if(_whale_vector[i].is_too_close(_squid)) {
+                BN_LOG("whale too close");
+                _whale_vector.pop_back();
+                i--;
+            }
         }
-    };
+
+        for(int i = 0; i < MAX_BUBBLES; i++) {
+        _bubble_vector.push_back(Bubbles(
+        data.random.get_unbiased_fixed(MIN_X, MAX_X),
+        MAX_Y,
+        data.random.get_unbiased_fixed(_BUBBLE_MIN_SPEED, _BUBBLE_MAX_SPEED)));
+        }
+}
 
     /**
  * The instructions given to the player at the beginning of the microgame.
@@ -58,9 +82,9 @@ namespace bnc
 
 int bnc_squid_escape::_whale_increase(mj::difficulty_level difficulty) {
     if(difficulty == mj::difficulty_level::EASY) {
-        return 3;
+        return 2;
     } else if (difficulty == mj::difficulty_level::NORMAL) {
-        return 4;
+        return 3;
     } 
     return 5;
 }
@@ -74,7 +98,7 @@ int bnc_squid_escape::_whale_increase(mj::difficulty_level difficulty) {
         return 600; 
     }
 
- /**
+/**
  * play is repeatedly called while the microgame is playing.
  * 
  * You can think of it as what previously was in the while event loop.
@@ -86,25 +110,27 @@ int bnc_squid_escape::_whale_increase(mj::difficulty_level difficulty) {
  */
 mj::game_result bnc_squid_escape::play([[maybe_unused]] const mj::game_data& data)
 {
-    // update the player position
-    _squid.update();
+        // update the player position
+        _squid.update();
 
-    //add another boolean for individual sharks
-    bool _caught_squid = false;
-    
-    //add the for loop to loop over enemies
-    for(int i = 0; i< _whale_vector.size(); i++){
-        //update the vector to the players location using the index
-        _whale_vector[i].update(_squid);
-
-        if(_whale_vector[i].get_whale_collision()) {
-
-            _caught_squid = true;
+        for(int i = 0; i< _bubble_vector.size(); i++){
+            //update the vector to move upwards randomly
+            _bubble_vector[i].update();
         }
-    }
+        //add another boolean for individual sharks
+        bool _caught_squid = false;
+        
+        //add the for loop to loop over enemies
+        for(int i = 0; i< _whale_vector.size(); i++){
+            //update the vector to the players location using the index
+            _whale_vector[i].update(_squid);
 
-    mj::game_result result(victory() || _caught_squid, false);
-    return result;
+            if(_whale_vector[i].get_whale_collision()) {
+                _caught_squid = true;
+            }
+        }
+        mj::game_result result(victory() || _caught_squid, false);
+        return result;
 }
 
 
@@ -117,7 +143,7 @@ bool bnc_squid_escape::victory() const {
     return _squid.out_of_bounds();
 }
 
- /**
+/**
  * Called repeatedly as the game fades into view. Unused for this particular microgame.
  * 
  * @param data shared information, such as a rng and number of frames left in the microgame
@@ -126,7 +152,7 @@ bool bnc_squid_escape::victory() const {
     {
     }
 
- /**
+/**
  * Called repeatedly as the game fades into view. Unused for this particular microgame.
  * 
  * @param data shared information, such as a rng and number of frames left in the microgame
