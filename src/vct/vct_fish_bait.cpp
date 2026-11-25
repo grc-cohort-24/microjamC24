@@ -23,8 +23,13 @@ namespace vct
     //Constructor for an instance of an vct_fish_bait
     vct_fish_bait::vct_fish_bait([[maybe_unused]] int completed_games, [[maybe_unused]] const mj::game_data& data) : mj::game("vct"),
     _bg(bn::regular_bg_items::vct_background.create_bg(0, 0)),
-    _player({20, 20}, 2)
-      
+    _player({20, 20}, _recommended_buttons(
+        recommended_difficulty_level(completed_games, data))) 
+        //I'm still not entirely sure what the amount of
+        //completed games is to move onto the next level is.
+        //I've experimented with different multiplier numbers for about 30 minutes and 8
+        //is what seems to work for my game, so I'll stick with it. (I know this isn't how
+        //it's supposed to be done, but this was really confusing)
     {
     }
 
@@ -34,10 +39,27 @@ namespace vct
         return "Hit the buttons!";
     }
 
+    //Game difficulty
+    int vct_fish_bait::_recommended_buttons(mj::difficulty_level difficulty)
+    {
+        if(difficulty == mj::difficulty_level::EASY)
+        {
+            return 7;
+        }
+        else if(difficulty == mj::difficulty_level::NORMAL)
+        {
+            return 10;
+        }
+        else
+        {
+            return 15;
+        }
+    }
+    
     //How long the game lasts for
     int vct_fish_bait::total_frames() const 
     {
-        return 300;
+        return 600; //10 seconds 60 fps
     }
 
     //Basically the "while" loop of our code, constantly updates player

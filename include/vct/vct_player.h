@@ -12,16 +12,13 @@ namespace vct {
 class player {
         //Screen bounds
         static constexpr int MAX_X = bn::display::width() / 2;
-
         static constexpr int MIN_X = -bn::display::width() / 2;
-
         static constexpr int MAX_Y = bn::display::height() / 2;
-        
         static constexpr int MIN_Y = -bn::display::height() / 2;
 
     public:
         //Player constructor
-        player(bn::fixed_point starting_position, bn::fixed speed);
+        player(bn::fixed_point starting_position, int button_count);
         
         //Constantly updates the game
         void update(bn::random& random, const bn::sprite_text_generator& text_generator);
@@ -35,10 +32,10 @@ class player {
         bn::sprite_ptr _sprite;
         
         //The max amount of buttons needed to be pressed
-        int _max[15]; 
+        int _max[15];   
         
         //How many buttons needed to be pressed for this round
-        int _length = 7;
+        int _length;
 
         //The amount of currently correctly pressed keys
         int _pressed = 0;        
