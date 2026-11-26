@@ -72,13 +72,20 @@ namespace luv
 
     private:
         static constexpr int MAX_TRAPS = 6;
-        static constexpr bn::fixed_point PLAYER_SPAWN = {20, -30};
+        static constexpr bn::fixed_point PLAYER_SPAWN = {20, -60};
         static constexpr bn::fixed PLAYER_SPEED = 2;
-        static constexpr bn::fixed SEA_FLOOR_MIN = 0;
-        static constexpr bn::fixed SEA_FLOOR_MAX = MAX_Y - 20;
+        static constexpr bn::fixed SEA_FLOOR_MIN_X = -110;
+        static constexpr bn::fixed SEA_FLOOR_MAX_X = 110;
+        static constexpr bn::fixed SEA_FLOOR_MIN_Y = 10;
+        static constexpr bn::fixed SEA_FLOOR_MAX_Y = MAX_Y - 20;
+        static constexpr bn::fixed TRAP_MIN_Y = 5;
+        static constexpr bn::fixed TRAP_MAX_Y = 30;
+        static constexpr int TRAP_UP = 120;
+        static constexpr int MAX_TIMER = 240;
         luv_player _player;
         luv_anemone _anemone;
         bn::regular_bg_ptr _background;
         bn::vector<luv_trap, MAX_TRAPS> _traps; 
+        int timer = 0;
     };
 };

@@ -12,7 +12,7 @@ namespace luv
     : _sprite(bn::sprite_items::luv_fish.create_sprite(starting_position)),
         _sprite_action(bn::create_sprite_animate_action_forever(
             _sprite, 
-            4, 
+            10, 
             bn::sprite_items::luv_fish.tiles_item(), 
             0, 1, 2, 3)),
         _speed(speed),
@@ -24,10 +24,26 @@ namespace luv
     void luv_player::update()
     {
         _update_position();
-
+        
         if (bn::keypad::any_held())
         {
             _update_animation();
+        }
+
+        //X-axis scroll logic
+        if (_sprite.x() > MAX_X) {
+            _sprite.set_x(MIN_X);
+        }
+        if (_sprite.x() < MIN_X) {
+            _sprite.set_x(MAX_X);
+        }
+
+        //Y-axis scroll logic
+        if (_sprite.y() > MAX_Y) {
+            _sprite.set_y(MIN_Y);
+        }
+        if (_sprite.y() < MIN_Y) {
+            _sprite.set_y(MAX_Y);
         }
     }
 
@@ -68,30 +84,39 @@ namespace luv
         if (bn::keypad::down_held())
         {
             _sprite.set_y(_sprite.y() + _speed);
+            
         }
 
         //Update the bounding box
         set_bounding_box(_sprite, _size);
     }
 
+    /**
+     * reads the player dpad movement and updates the sprite animation.
+     */
     void luv::luv_player::_update_animation()
     {
+        
         if (bn::keypad::left_held())
         {
-            _sprite_action = bn::create_sprite_animate_action_forever(_sprite, 4, bn::sprite_items::luv_fish.tiles_item(), 0, 1, 2, 3);
+            _sprite.set_horizontal_flip(true);
+            _sprite_action.update();
         }
-        if (bn::keypad::right_held())
+        else  if (bn::keypad::right_held())
         {
-            _sprite_action = bn::create_sprite_animate_action_forever(_sprite, 4, bn::sprite_items::luv_fish.tiles_item(), 0, 1, 2, 3);
+            _sprite.set_horizontal_flip(false);
+            _sprite_action.update();
+        } else {
+            _sprite_action.update();
         }
-        if (bn::keypad::up_held())
-        {
-            _sprite_action = bn::create_sprite_animate_action_forever(_sprite, 4, bn::sprite_items::luv_fish.tiles_item(), 0, 1, 2, 3);
-        }
-        if (bn::keypad::down_held())
-        {
-            _sprite_action = bn::create_sprite_animate_action_forever(_sprite, 4, bn::sprite_items::luv_fish.tiles_item(), 0, 1, 2, 3);
-        }
-        _sprite_action.update();
     }
+
+    bn::fixed luv::luv_player::get_player_x() {
+        return _sprite.x();
+    };
+
+    bn::fixed luv::luv_player::get_player_y() {
+        return _sprite.y();
+    };
+
 }
