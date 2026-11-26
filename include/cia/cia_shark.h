@@ -5,6 +5,7 @@
 #include <bn_sprite_ptr.h>
 #include <bn_display.h>
 #include <bn_random.h>
+#include <bn_sprite_animate_actions.h>
 
 #include "cia_player.h"
 
@@ -24,7 +25,7 @@ namespace cia
 
     private:
         bn::sprite_ptr _sprite;
-
+        bn::sprite_animate_action<4> _action;
         bn::fixed _speed;
     };
 }

@@ -5,6 +5,8 @@
 #include <bn_sprite_ptr.h>
 #include <bn_display.h>
 
+#include <bn_sprite_animate_actions.h>
+
 // Namespace used for the cia project
 namespace cia
 {
@@ -59,6 +61,8 @@ namespace cia
     private:
         // The player sprite
         bn::sprite_ptr _sprite;
+
+        bn::sprite_animate_action<4> _action;
 
         // The speed of the player
         bn::fixed _speed;
